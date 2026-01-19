@@ -109,7 +109,11 @@ app.get("/todos/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const todos = await Todo.find({ userId, status: "active" })
+    const todos = await Todo.find({
+  userId,
+  status: { $in: ["active", "completed", "archived"] }
+});
+
     
     res.json(todos);
 
@@ -125,14 +129,16 @@ app.put("/todos/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid ID" });
     }
 
-    const updatedTodo = await Todo.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: req.body.name,
-        status: req.body.status
-      },
-      { new: true }
-    );
+  const updateData = {};
+if (req.body.name !== undefined) updateData.name = req.body.name;
+if (req.body.status !== undefined) updateData.status = req.body.status;
+
+const updatedTodo = await Todo.findByIdAndUpdate(
+  req.params.id,
+  updateData,
+  { new: true }
+);
+
 
     if (!updatedTodo) {
       return res.status(404).json({ message: "Todo not found" });
@@ -164,21 +170,6 @@ app.delete("/todos/:id", async (req, res) => {
   }
 });
 
-app.put("/archive", async (req, res) => {
-  try {
-    const { ids } = req.body; //array of ids to be archived
-    if (!Array.isArray(ids) || ids.length === 0) {
-      return res.status(400).json({ message: "Array of IDs required" });
-    }
-    const result = await Todo.updateMany(
-      { _id: { $in: ids } },
-      { $set: { status: "archived" } }
-    );
-    res.json({ message: `${result.nModified} todos archived` });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  } 
-});
 
 
 // ---------------- DB CONNECTION ----------------
