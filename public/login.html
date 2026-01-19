@@ -3,6 +3,7 @@
 <head>
   <title>Login</title>
 <style>
+<style>
 * {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
@@ -26,27 +27,28 @@ body {
 .card {
   position: relative;
   height: 400px;
+  cursor: pointer;
 }
 
 /* ===== SLIDES ===== */
 .card .slide {
   width: 100%;
   height: 200px;
-  transition: 0.7s ease;
+  transition: transform 0.7s cubic-bezier(.4,0,.2,1);
 }
 
-/* ===== SLIDE 1 (HEADER) ===== */
+/* ===== SLIDE 1 (WELCOME) ===== */
 .card .slide1 {
   background: #2c73df;
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translateY(100px);
-  z-index: 1;
+  transform: translateY(0); /* visible initially */
+  z-index: 2;
 }
 
 .card:hover .slide1 {
-  transform: translateY(0);
+  transform: translateY(-100px); /* move out */
 }
 
 .card .slide1 h2 {
@@ -54,16 +56,17 @@ body {
   margin: 0;
 }
 
-/* ===== SLIDE 2 (FORM BOX) ===== */
+/* ===== SLIDE 2 (LOGIN FORM) ===== */
 .card .slide2 {
   background: white;
   padding: 25px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  transform: translateY(-100px);
+  transform: translateY(100px); /* hidden initially */
+  z-index: 1;
 }
 
 .card:hover .slide2 {
-  transform: translateY(0);
+  transform: translateY(0); /* slide in */
 }
 
 /* ===== FORM ===== */
@@ -99,7 +102,7 @@ body {
   color: #2c73df;
 }
 
-/* ===== HOLOGRAPHIC BUTTON ===== */
+/* ===== GLOW BUTTON ===== */
 .glow-btn {
   width: 100%;
   padding: 12px;
@@ -114,13 +117,12 @@ body {
   isolation: isolate;
 }
 
-/* Button text */
 .glow-btn span {
   position: relative;
   z-index: 3;
 }
 
-/* Border glow (stage 1) */
+/* Border glow */
 .glow-btn::before {
   content: "";
   position: absolute;
@@ -134,7 +136,7 @@ body {
   transition: opacity 0.25s ease;
 }
 
-/* Inner glow (stage 2) */
+/* Inner glow */
 .glow-btn::after {
   content: "";
   position: absolute;
@@ -177,6 +179,7 @@ body {
 </style>
 
 
+
 </head>
 <body>
 
@@ -192,12 +195,12 @@ body {
     <div class="slide slide2">
 
       <div class="field">
-        <input type="text" id="username" required placeholder=" ">
+        <input type="text" id="username" required placeholder="Enter your username">
         <label>Username</label>
       </div>
 
       <div class="field">
-        <input type="password" id="password" required placeholder=" ">
+        <input type="password" id="password" required placeholder="Enter password">
         <label>Password</label>
       </div>
 
