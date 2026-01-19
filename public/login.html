@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login</title>
-<style>
 <style>
 * {
   box-sizing: border-box;
@@ -10,45 +8,58 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 200vh;
   margin: 0;
   background: linear-gradient(135deg, #6dd5fa, #2980b9);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center;     /* horizontal center */
+  align-items: flex-start;     /* push content up */
+  padding-top: 40px;           /* adjust ↑↓ here */
 }
+
+
 
 /* ===== CARD CONTAINER ===== */
 .container {
   width: 300px;
 }
 
+
 /* ===== CARD ===== */
 .card {
-  position: relative;
-  height: 400px;
-  cursor: pointer;
-}
 
-/* ===== SLIDES ===== */
+  position: relative;
+  height: 700px;
+  overflow: hidden;
+  cursor: pointer;
+
+}
+.card .slide2 {
+  height: 440px;          /* increased */
+         /* more breathing room */
+}
+/* ===== SLIDES (OVERLAPPED AT CENTER) ===== */
 .card .slide {
+  position: absolute;
   width: 100%;
   height: 200px;
-  transition: transform 0.7s cubic-bezier(.4,0,.2,1);
+  left: 0;
+  top: 50%;                              /* 🔥 START AT CENTER */
+  transform: translateY(-50%);
+  transition: transform 0.8s cubic-bezier(.4,0,.2,1);
 }
 
-/* ===== SLIDE 1 (WELCOME) ===== */
+/* ===== SLIDE 1 (WELCOME – TOP FLAP) ===== */
 .card .slide1 {
   background: #2c73df;
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translateY(0); /* visible initially */
   z-index: 2;
 }
 
 .card:hover .slide1 {
-  transform: translateY(-100px); /* move out */
+  transform: translateY(-50%);          /* 🔼 MOVE UP */
 }
 
 .card .slide1 h2 {
@@ -56,18 +67,18 @@ body {
   margin: 0;
 }
 
-/* ===== SLIDE 2 (LOGIN FORM) ===== */
+/* ===== SLIDE 2 (LOGIN – BOTTOM FLAP) ===== */
 .card .slide2 {
   background: white;
   padding: 25px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  transform: translateY(100px); /* hidden initially */
   z-index: 1;
 }
 
 .card:hover .slide2 {
-  transform: translateY(0); /* slide in */
+  transform: translateY(50%);            /* 🔽 MOVE DOWN */
 }
+
 
 /* ===== FORM ===== */
 .field {
@@ -154,30 +165,7 @@ body {
 .glow-btn:hover::after {
   opacity: 1;
 }
-
-/* ===== LINKS & ERROR ===== */
-.link {
-  text-align: center;
-  margin-top: 12px;
-}
-
-.link a {
-  color: #2c73df;
-  text-decoration: none;
-}
-
-.error {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
-  display: none;
-}
-
-.error.show {
-  display: block;
-}
-</style>
-
+</style> <title>Login</title>
 
 
 </head>
