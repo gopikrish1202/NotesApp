@@ -112,7 +112,7 @@ async function addTodo() {
   if (!res.ok) {
     const text = await res.text();
     console.error("Failed to add todo:", text);
-    alert("Error adding todo: " + text);
+    alert("Error adding todo: " + res);
     return;
   }
 
