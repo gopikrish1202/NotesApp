@@ -1,15 +1,12 @@
-// Import Express framework
+// ---------------- IMPORTS ----------------
 const express = require("express");
-
-// Import Mongoose to work with MongoDB
 const mongoose = require("mongoose");
-
 const path = require("path");
 
-const app = express(); // ✅ CREATE APP FIRST
-
+const app = express();
 app.use(express.json());
 
+// ---------------- USER SCHEMA ----------------
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
@@ -17,6 +14,18 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", UserSchema);
 
+// ---------------- TODO SCHEMA ----------------
+const TodoSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  completed: { type: Boolean, default: false },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+});
+
+const Todo = mongoose.model("Todo", TodoSchema);
+
+// ---------------- AUTH ROUTES ----------------
+
+// REGISTER
 app.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -25,14 +34,11 @@ app.post("/register", async (req, res) => {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-     
       return res.status(409).json({ message: "User already exists" });
     }
 
-    // Save new user
     await User.create({ username, password });
 
     res.status(201).json({ message: "User registered successfully" });
@@ -41,100 +47,77 @@ app.post("/register", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// LOGIN
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username, password });
-
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-  
-
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({
+      message: "Login successful",
+      userId: user._id,
+      username: user.username
+    });
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-
-// ✅ Login page as default route
+// ---------------- UI ROUTES ----------------
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/login.html"));
 });
 
-// ✅ Serve static files (login.html, index.html, app.js)
 app.use(express.static(path.join(__dirname, "public")));
 
-// Connect to MongoDB
-mongoose.connect(
-  "mongodb+srv://gurramsriranga1202_db_user:mCnenO3B0CJePEwL@nodecluster1202.a98coqp.mongodb.net/todos"
-)
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.error(err));
+// ---------------- TODO ROUTES ----------------
 
-
-// Define schema
-const TodoSchema = new mongoose.Schema({
-  name: String,
-  completed: Boolean,
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
-});
-
-
-// Create model
-const Todo = mongoose.model("Todo", TodoSchema);
-
-/* ---------------- CREATE ---------------- */
+// CREATE TODO
 app.post("/todos", async (req, res) => {
   try {
+    const { name, userId } = req.body;
+
+    if (!name || !userId) {
+      return res.status(400).json({ message: "name and userId required" });
+    }
+
     const todo = await Todo.create({
-      name: req.body.name,
-      completed: false
+      name,
+      completed: false,
+      userId
     });
+
     res.status(201).json(todo);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- READ ALL ---------------- */
-app.get("/todos", async (req, res) => {
+// GET TODOS FOR LOGGED-IN USER ✅
+app.get("/todos/user/:userId", async (req, res) => {
   try {
-    const todos = await Todo.find();
+    const { userId } = req.params;
+
+    const todos = await Todo.find({ userId });
     res.json(todos);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- READ ONE ---------------- */
-app.get("/todos/:id", async (req, res) => {
-  try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ error: "Invalid ID format" });
-    }
-
-    const todo = await Todo.findById(req.params.id);
-
-    if (!todo) {
-      return res.status(404).json({ message: "Todo not found" });
-    }
-
-    res.json(todo);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/* ---------------- UPDATE ---------------- */
+// UPDATE TODO
 app.put("/todos/:id", async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ error: "Invalid ID format" });
+      return res.status(400).json({ message: "Invalid ID" });
     }
 
     const updatedTodo = await Todo.findByIdAndUpdate(
@@ -151,45 +134,41 @@ app.put("/todos/:id", async (req, res) => {
     }
 
     res.json(updatedTodo);
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-/* ---------------- DELETE ---------------- */
+// DELETE TODO
 app.delete("/todos/:id", async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ error: "Invalid ID format" });
+      return res.status(400).json({ message: "Invalid ID" });
     }
 
     const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
-
     if (!deletedTodo) {
       return res.status(404).json({ message: "Todo not found" });
     }
 
     res.json({ message: "Todo deleted successfully" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Start server
-// app.listen(3000, () =>
-//   console.log("Server running on http://localhost:3000")
-// );
+// ---------------- DB CONNECTION ----------------
+mongoose.connect(
+  "mongodb+srv://gurramsriranga1202_db_user:mCnenO3B0CJePEwL@nodecluster1202.a98coqp.mongodb.net/todos"
+)
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.error(err));
+
+// ---------------- START SERVER ----------------
 const PORT = process.env.PORT || 3000;
- console.log(`Server running on port ${PORT}`);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on ${PORT}`);
 });
-
-
-
-
-
-
-
-
