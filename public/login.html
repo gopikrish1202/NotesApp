@@ -183,6 +183,7 @@ async function login() {
   });
 
   if (res.ok) {
+    const data = await res.json();
       localStorage.setItem("userId", data.userId);
   localStorage.setItem("username", data.username);
 
