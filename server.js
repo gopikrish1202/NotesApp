@@ -10,16 +10,53 @@ const app = express(); // ✅ CREATE APP FIRST
 
 app.use(express.json());
 
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
 
-  // TEMP login (for learning)
-  if (username === "admin" && password === "1234") {
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(401);
+const User = mongoose.model("User", UserSchema);
+
+app.post("/register", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    // Save new user
+    await User.create({ username, password });
+
+    res.status(201).json({ message: "User registered successfully" });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
+app.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await User.findOne({ username, password });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    res.status(200).json({ message: "Login successful" });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // ✅ Login page as default route
 app.get("/", (req, res) => {
@@ -35,6 +72,7 @@ mongoose.connect(
 )
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.error(err));
+
 
 // Define schema
 const TodoSchema = new mongoose.Schema({
@@ -142,6 +180,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
