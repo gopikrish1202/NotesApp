@@ -92,18 +92,19 @@ app.post("/todos", async (req, res) => {
     }
 
     const todo = await Todo.create({
-      name,
-      userId,
-      status: status || "active"
+      name: name.trim(),
+      status: status || "active",
+      userId: new mongoose.Types.ObjectId(userId)
     });
 
     res.status(201).json(todo);
 
   } catch (err) {
-    console.error("Create todo error:", err);
+    console.error("Create todo validation error:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // GET TODOS FOR LOGGED-IN USER ✅
