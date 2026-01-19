@@ -103,7 +103,8 @@ async function addTodo() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name: input.value,
-      userId: userId
+      userId: userId,
+      status: "active"
     })
   });
 
