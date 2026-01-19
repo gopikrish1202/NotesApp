@@ -4,14 +4,20 @@ const express = require("express");
 // Import Mongoose to work with MongoDB
 const mongoose = require("mongoose");
 
-const path = require("path");   // ✅ ADD HERE
+const path = require("path");
 
-const app = express();
+const app = express(); // ✅ CREATE APP FIRST
 
 app.use(express.json());
 
-// ✅ ADD HERE (before routes)
+// ✅ Login page as default route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/login.html"));
+});
+
+// ✅ Serve static files (login.html, index.html, app.js)
 app.use(express.static(path.join(__dirname, "public")));
+
 // Connect to MongoDB
 mongoose.connect(
   "mongodb+srv://gurramsriranga1202_db_user:mCnenO3B0CJePEwL@nodecluster1202.a98coqp.mongodb.net/todos"
@@ -125,6 +131,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
