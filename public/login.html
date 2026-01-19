@@ -208,19 +208,70 @@ body {
 </div>
 
 <script>
-const btn = document.querySelector(".glow-btn");
+/* ===============================
+   LOGIN FUNCTION
+================================ */
+async function login() {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorEl = document.getElementById("error");
 
-btn.addEventListener("mousemove", e => {
-  const rect = btn.getBoundingClientRect();
-  btn.style.setProperty("--x", `${e.clientX - rect.left}px`);
-  btn.style.setProperty("--y", `${e.clientY - rect.top}px`);
-});
+  // Basic validation
+  if (!username || !password) {
+    errorEl.textContent = "Please enter username and password";
+    errorEl.classList.add("show");
+    return;
+  }
 
-btn.addEventListener("mouseleave", () => {
-  btn.style.removeProperty("--x");
-  btn.style.removeProperty("--y");
+  try {
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username, password })
+    });
+
+    if (!res.ok) {
+      throw new Error("Invalid credentials");
+    }
+
+    const data = await res.json();
+
+    // Store session data
+    localStorage.setItem("userId", data.userId);
+    localStorage.setItem("username", data.username);
+
+    // Redirect after login
+    window.location.href = "/index.html";
+
+  } catch (err) {
+    errorEl.textContent = "Invalid username or password";
+    errorEl.classList.add("show");
+  }
+}
+
+/* ===============================
+   GLOW BUTTON CURSOR EFFECT
+================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.querySelector(".glow-btn");
+
+  if (!btn) return;
+
+  btn.addEventListener("mousemove", (e) => {
+    const rect = btn.getBoundingClientRect();
+    btn.style.setProperty("--x", `${e.clientX - rect.left}px`);
+    btn.style.setProperty("--y", `${e.clientY - rect.top}px`);
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    btn.style.removeProperty("--x");
+    btn.style.removeProperty("--y");
+  });
 });
 </script>
+
 
 </body>
 
