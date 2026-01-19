@@ -28,13 +28,13 @@ app.post("/register", async (req, res) => {
     // Check if user already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      alert("User already exists")
+     
       return res.status(409).json({ message: "User already exists" });
     }
 
     // Save new user
     await User.create({ username, password });
-alert("User registered successfully!")
+
     res.status(201).json({ message: "User registered successfully" });
 
   } catch (err) {
@@ -51,7 +51,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    alert("Login successful!")
+  
 
     res.status(200).json({ message: "Login successful" });
 
@@ -183,6 +183,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
