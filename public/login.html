@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body style="background-color: lightgray;">
+  <h2>Login</h2>
+
+  <input id="username" placeholder="Username" /><br><br>
+  <input id="password" type="password" placeholder="Password" /><br><br>
+
+  <button onclick="login()">Login</button>
+
+  <p id="error" style="color:red;"></p>
+
+  <script>
+    async function login() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (res.ok) {
+        window.location.href = "/index.html"; // open todo app
+      } else {
+        document.getElementById("error").innerText = "Invalid login";
+      }
+    }
+  </script>
+</body>
+</html>
