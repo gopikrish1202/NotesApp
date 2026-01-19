@@ -10,6 +10,17 @@ const app = express(); // ✅ CREATE APP FIRST
 
 app.use(express.json());
 
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  // TEMP login (for learning)
+  if (username === "admin" && password === "1234") {
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 // ✅ Login page as default route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/login.html"));
@@ -131,6 +142,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
