@@ -27,7 +27,8 @@ async function loadTodos() {
   todos.forEach(todo => {
     const li = document.createElement("li");
 
-    const isCompleted = todo.completed === true;
+    const isCompleted = todo.status === "completed";
+
 
     // --- Name input ---
     const nameInput = document.createElement("input");
@@ -41,8 +42,10 @@ async function loadTodos() {
     checkbox.type = "checkbox";
     checkbox.checked = isCompleted;
     checkbox.addEventListener("change", () => {
-      toggleTodo(todo._id, checkbox.checked);
-    });
+  const newStatus = checkbox.checked ? "completed" : "active";
+  updateStatus(todo._id, newStatus);
+});
+
 // --- Delete icon ---
 const deleteBtn = document.createElement("span");
 deleteBtn.textContent = "🗑️";
@@ -54,19 +57,16 @@ deleteBtn.addEventListener("click", () => {
 });
 
 const archiveBtn = document.createElement("span");
-archiveBtn.textContent = `<img src="https://cdn.prod.website-files.com/680a93d128c5b2a854b57c98/68ba0a0f910357491c07cf6e_644057e01cce5c85d15d1c80_archive_24px.svg" alt="Archive" width="16" height="16">`;
+archiveBtn.innerHTML = `<img src="https://cdn.prod.website-files.com/680a93d128c5b2a854b57c98/68ba0a0f910357491c07cf6e_644057e01cce5c85d15d1c80_archive_24px.svg" alt="Archive" width="16" height="16">`;
 archiveBtn.style.cursor = "pointer";
 archiveBtn.style.marginLeft = "10px";
 
 archiveBtn.addEventListener("click", () => {
-  archiveTodo(todo._id);
+  updateStatus(todo._id, "archived");
 });
 
-async function archiveTodo(id) {
-  const res = await fetch(`/todos/${id}/archive`, {
-    method: "PUT"
-  }); 
-}
+
+
 
 
 
@@ -74,7 +74,12 @@ async function archiveTodo(id) {
 
     // --- Status label ---
     const label = document.createElement("span");
-    label.textContent = isCompleted ? " Completed" : " Pending";
+    label.textContent =
+  todo.status === "completed"
+    ? " Completed"
+    : todo.status === "archived"
+    ? " Archived"
+    : " Pending";
 
     li.appendChild(nameInput);
     li.appendChild(checkbox);
@@ -129,22 +134,22 @@ async function updateTodo(id, newName) {
   loadTodos();
 }
 
-// ---------------- TOGGLE TODO STATUS ----------------
-async function toggleTodo(id, status) {
+async function updateStatus(id, status) {
   const res = await fetch(`/todos/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ completed: status })
+    body: JSON.stringify({ status })
   });
 
   if (!res.ok) {
     const text = await res.text();
-    console.error("Failed to toggle todo:", text);
+    console.error("Failed to update status:", text);
     return;
   }
 
   loadTodos();
 }
+
 
 async function deleteTodo(id) {
   const res = await fetch(`/todos/${id}`, {
