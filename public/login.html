@@ -88,23 +88,27 @@ body {
 
 .field input {
   width: 100%;
-  padding: 10px;
+  padding: 22px 12px 8px;   /* ⬅️ KEY FIX */
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
+  font-size: 15px;
 }
 
 .field label {
   position: absolute;
-  top: 50%;
-  left: 10px;
+  top: 8px;
+  left: 12px;
+  font-size: 13px;
   color: #777;
-  transform: translateY(-50%);
-  transition: 0.3s;
-  background: white;
-  padding: 0 5px;
+  background: #fff;
+  padding: 0 8px;
+  display: inline-block;      /* 🔥 KEY */
+  line-height: 1.2;           /* 🔥 KEY */
   pointer-events: none;
+  transition: all 0.25s ease;
 }
+
 
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
@@ -165,7 +169,8 @@ body {
 .glow-btn:hover::after {
   opacity: 1;
 }
-</style> <title>Login</title>
+</style>
+ <title>Login</title>
 
 
 </head>
