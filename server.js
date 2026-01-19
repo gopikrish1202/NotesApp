@@ -10,18 +10,22 @@ app.use(express.json());
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
-});
+}); //creating schema for user
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema); //building a model using the schema
 
 // ---------------- TODO SCHEMA ----------------
 const TodoSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  completed: { type: Boolean, default: false },
+  status: {
+  type: String,
+  enum: ["active", "completed", "archived", "deleted"],
+  default: "active"
+},
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
-});
+}); //creating schema for todo items
 
-const Todo = mongoose.model("Todo", TodoSchema);
+const Todo = mongoose.model("Todo", TodoSchema); //building a model for todo items data using the respective schema
 
 // ---------------- AUTH ROUTES ----------------
 
@@ -51,9 +55,9 @@ app.post("/register", async (req, res) => {
 // LOGIN
 app.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.body; //getting username and password from req body
 
-    const user = await User.findOne({ username, password });
+    const user = await User.findOne({ username, password }); //comparing with the database, using the schema instance
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -89,7 +93,7 @@ app.post("/todos", async (req, res) => {
 
     const todo = await Todo.create({
       name,
-      completed: false,
+      status: "active",
       userId
     });
 
@@ -105,7 +109,8 @@ app.get("/todos/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const todos = await Todo.find({ userId });
+    const todos = await Todo.find({ userId, status: "active" })
+    
     res.json(todos);
 
   } catch (err) {
@@ -124,7 +129,7 @@ app.put("/todos/:id", async (req, res) => {
       req.params.id,
       {
         name: req.body.name,
-        completed: req.body.completed
+        status: req.body.status
       },
       { new: true }
     );
@@ -158,6 +163,23 @@ app.delete("/todos/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.put("/archive", async (req, res) => {
+  try {
+    const { ids } = req.body; //array of ids to be archived
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "Array of IDs required" });
+    }
+    const result = await Todo.updateMany(
+      { _id: { $in: ids } },
+      { $set: { status: "archived" } }
+    );
+    res.json({ message: `${result.nModified} todos archived` });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  } 
+});
+
 
 // ---------------- DB CONNECTION ----------------
 mongoose.connect(

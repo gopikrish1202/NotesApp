@@ -53,6 +53,22 @@ deleteBtn.addEventListener("click", () => {
   deleteTodo(todo._id);
 });
 
+const archiveBtn = document.createElement("span");
+archiveBtn.textContent = `<img src="https://cdn.prod.website-files.com/680a93d128c5b2a854b57c98/68ba0a0f910357491c07cf6e_644057e01cce5c85d15d1c80_archive_24px.svg" alt="Archive" width="16" height="16">`;
+archiveBtn.style.cursor = "pointer";
+archiveBtn.style.marginLeft = "10px";
+
+archiveBtn.addEventListener("click", () => {
+  archiveTodo(todo._id);
+});
+
+async function archiveTodo(id) {
+  const res = await fetch(`/todos/${id}/archive`, {
+    method: "PUT"
+  }); 
+}
+
+
 
 
 
@@ -64,6 +80,7 @@ deleteBtn.addEventListener("click", () => {
     li.appendChild(checkbox);
     li.appendChild(label);
     li.appendChild(deleteBtn);
+    li.appendChild(archiveBtn);
 
     list.appendChild(li);
   });
