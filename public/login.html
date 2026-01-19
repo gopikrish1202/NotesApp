@@ -3,7 +3,7 @@
 <head>
   <title>Login</title>
 <style>
-  * {
+* {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
@@ -17,59 +17,67 @@ body {
   align-items: center;
 }
 
-/* Container */
+/* ===== CARD CONTAINER ===== */
 .container {
-  width: 100%;
-  max-width: 350px;
+  width: 300px;
 }
 
-/* Card */
+/* ===== CARD ===== */
 .card {
+  position: relative;
+  height: 400px;
+}
+
+/* ===== SLIDES ===== */
+.card .slide {
+  width: 100%;
+  height: 200px;
+  transition: 0.7s ease;
+}
+
+/* ===== SLIDE 1 (HEADER) ===== */
+.card .slide1 {
+  background: #2c73df;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(100px);
+  z-index: 1;
+}
+
+.card:hover .slide1 {
+  transform: translateY(0);
+}
+
+.card .slide1 h2 {
+  color: #fff;
+  margin: 0;
+}
+
+/* ===== SLIDE 2 (FORM BOX) ===== */
+.card .slide2 {
   background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-  opacity: 0;
-  transform: translateY(40px);
+  padding: 25px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  transform: translateY(-100px);
 }
 
-/* Slide-in animation */
-.slide-in {
-  animation: slideUp 0.6s ease forwards;
+.card:hover .slide2 {
+  transform: translateY(0);
 }
 
-@keyframes slideUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.card h2 {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-/* Floating fields */
+/* ===== FORM ===== */
 .field {
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .field input {
   width: 100%;
-  padding: 12px 10px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 14px;
   outline: none;
-  transition: transform 0.2s ease, border 0.2s ease;
-}
-
-/* Input translate on focus */
-.field input:focus {
-  border-color: #2980b9;
-  transform: translateX(4px);
 }
 
 .field label {
@@ -77,180 +85,152 @@ body {
   top: 50%;
   left: 10px;
   color: #777;
-  font-size: 14px;
-  pointer-events: none;
   transform: translateY(-50%);
-  transition: 0.3s ease;
+  transition: 0.3s;
   background: white;
   padding: 0 5px;
+  pointer-events: none;
 }
 
-/* Floating label */
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
   top: -8px;
   font-size: 12px;
-  color: #2980b9;
+  color: #2c73df;
 }
 
-/* Button */
-button {
+/* ===== HOLOGRAPHIC BUTTON ===== */
+.glow-btn {
   width: 100%;
   padding: 12px;
-  background: #2980b9;
+  background: #111;
+  border-radius: 8px;
   border: none;
-  color: white;
+  color: #0ff;
   font-size: 15px;
-  border-radius: 6px;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/* Button lift */
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+/* Button text */
+.glow-btn span {
+  position: relative;
+  z-index: 3;
 }
 
-/* Links */
+/* Border glow (stage 1) */
+.glow-btn::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(0,255,255,0.9),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Inner glow (stage 2) */
+.glow-btn::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(0,255,255,0.6),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease 0.15s;
+}
+
+.glow-btn:hover::before,
+.glow-btn:hover::after {
+  opacity: 1;
+}
+
+/* ===== LINKS & ERROR ===== */
 .link {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 12px;
 }
 
 .link a {
-  color: #2980b9;
+  color: #2c73df;
   text-decoration: none;
 }
 
-/* Error slide-down */
 .error {
   color: red;
   text-align: center;
   margin-top: 10px;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
+  display: none;
 }
 
 .error.show {
-  opacity: 1;
-  transform: translateY(0);
+  display: block;
 }
-.holographic-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 5vh;
-  background: #000;
-}
-
-.holographic-card {
-  width: 300px;
-  height: 50px;
-  background: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  border-radius: 15px;
-  transition: all 0.5s ease;
-}
-
-.holographic-card h2 {
-  color: #0ff;
-  font-size: 2rem;
-  position: relative;
-  z-index: 2;
-}
-
-.holographic-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    0deg, 
-    transparent, 
-    transparent 30%, 
-    rgba(0,255,255,0.3)
-  );
-  transform: rotate(-45deg);
-  transition: all 0.5s ease;
-  opacity: 0;
-}
-
-.holographic-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(0,255,255,0.5);
-}
-
-.holographic-card:hover::before {
-  opacity: 1;
-  transform: rotate(-45deg) translateY(100%);
-}
-
-
 </style>
+
 
 </head>
 <body>
 
-  <div class="container">
-   <div class="card slide-in">
-      <h2>Login</h2>
+<div class="container">
+  <div class="card">
+
+    <!-- SLIDE 1 -->
+    <div class="slide slide1">
+      <h2>Welcome Back</h2>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide slide2">
 
       <div class="field">
-  <input type="text" id="username" required placeholder=" " />
-  <label>Username</label>
-</div>
+        <input type="text" id="username" required placeholder=" ">
+        <label>Username</label>
+      </div>
 
-<div class="field">
-  <input type="password" id="password" required placeholder=" " />
-  <label>Password</label>
-</div>
+      <div class="field">
+        <input type="password" id="password" required placeholder=" ">
+        <label>Password</label>
+      </div>
 
-
-      <button onclick="login()" class="holographic-card">Login</button>
+      <button class="glow-btn" onclick="login()">
+        <span>Login</span>
+      </button>
 
       <p class="link">
         New user? <a href="/register.html">Register</a>
       </p>
 
       <p id="error" class="error"></p>
+
     </div>
+
   </div>
+</div>
 
 <script>
-async function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+const btn = document.querySelector(".glow-btn");
 
-  const res = await fetch("/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ username, password })
-  });
+btn.addEventListener("mousemove", e => {
+  const rect = btn.getBoundingClientRect();
+  btn.style.setProperty("--x", `${e.clientX - rect.left}px`);
+  btn.style.setProperty("--y", `${e.clientY - rect.top}px`);
+});
 
-  if (res.ok) {
-    const data = await res.json();
-      localStorage.setItem("userId", data.userId);
-  localStorage.setItem("username", data.username);
-
-    window.location.href = "/index.html";
-  } else {
-    const errorEl = document.getElementById("error");
-    errorEl.innerText = "Invalid username or password";
-    errorEl.classList.add("show");
-    alert("Invalid Username or Password")
-  }
-}
+btn.addEventListener("mouseleave", () => {
+  btn.style.removeProperty("--x");
+  btn.style.removeProperty("--y");
+});
 </script>
 
 </body>
+
 </html>
