@@ -103,15 +103,16 @@ async function addTodo() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: input.value,
+      name: input.value.trim(),
       userId: userId,
-        status: "active"
+      status: "active"
     })
   });
 
   if (!res.ok) {
     const text = await res.text();
     console.error("Failed to add todo:", text);
+    alert("Error adding todo: " + text);
     return;
   }
 
