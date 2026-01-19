@@ -1,10 +1,25 @@
 console.log("app.js loaded");
 
+// ---------------- LOAD TODOS ----------------
 async function loadTodos() {
-  const res = await fetch("/todos");
-  const todos = await res.json();
+  const userId = localStorage.getItem("userId");
 
-  console.log("Todos from backend:", todos); // DEBUG
+  if (!userId) {
+    console.warn("No userId found. Redirecting to login.");
+    window.location.href = "/login.html";
+    return;
+  }
+
+  const res = await fetch(`/todos/user/${userId}`);
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Failed to load todos:", text);
+    return;
+  }
+
+  const todos = await res.json();
+  console.log("Todos from backend:", todos);
 
   const list = document.getElementById("todoList");
   list.innerHTML = "";
@@ -12,8 +27,7 @@ async function loadTodos() {
   todos.forEach(todo => {
     const li = document.createElement("li");
 
-    // Normalize completed to boolean (handles "true"/"false" strings)
-    const isCompleted = todo.completed === true || todo.completed === "true";
+    const isCompleted = todo.completed === true;
 
     // --- Name input ---
     const nameInput = document.createElement("input");
@@ -42,40 +56,65 @@ async function loadTodos() {
   });
 }
 
+// ---------------- ADD TODO ----------------
 async function addTodo() {
   const input = document.getElementById("todoInput");
-  if (!input.value.trim()) return;
+  const userId = localStorage.getItem("userId");
 
-  await fetch("/todos", {
+  if (!input.value.trim() || !userId) return;
+
+  const res = await fetch("/todos", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: input.value })
+    body: JSON.stringify({
+      name: input.value,
+      userId: userId
+    })
   });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Failed to add todo:", text);
+    return;
+  }
 
   input.value = "";
   loadTodos();
 }
 
+// ---------------- UPDATE TODO NAME ----------------
 async function updateTodo(id, newName) {
-  await fetch(`/todos/${id}`, {
+  const res = await fetch(`/todos/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name: newName })
   });
 
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Failed to update todo:", text);
+    return;
+  }
+
   loadTodos();
 }
 
+// ---------------- TOGGLE TODO STATUS ----------------
 async function toggleTodo(id, status) {
-  console.log("Updating completed:", status); // DEBUG
-
-  await fetch(`/todos/${id}`, {
+  const res = await fetch(`/todos/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed: status })
   });
 
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Failed to toggle todo:", text);
+    return;
+  }
+
   loadTodos();
 }
 
+// ---------------- INITIAL LOAD ----------------
 loadTodos();
