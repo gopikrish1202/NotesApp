@@ -2,37 +2,173 @@
 <html>
 <head>
   <title>Login</title>
+<style>
+  * {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Card */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Slide-in animation */
+.slide-in {
+  animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* Floating fields */
+.field {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.field input {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: transform 0.2s ease, border 0.2s ease;
+}
+
+/* Input translate on focus */
+.field input:focus {
+  border-color: #2980b9;
+  transform: translateX(4px);
+}
+
+.field label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  color: #777;
+  font-size: 14px;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: 0.3s ease;
+  background: white;
+  padding: 0 5px;
+}
+
+/* Floating label */
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #2980b9;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  background: #2980b9;
+  border: none;
+  color: white;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Button lift */
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* Links */
+.link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.link a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+/* Error slide-down */
+.error {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.error.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+</style>
+
 </head>
-<body style="background-color: lightgray;">
-  <h2>Login</h2>
+<body>
 
-  <input id="username" placeholder="Username" /><br><br>
-  <input id="password" type="password" placeholder="Password" /><br><br>
+  <div class="container">
+   <div class="card slide-in">
+      <h2>Login</h2>
 
-  <button onclick="login()">Login</button>
-  <p>New User? , <a href="/register.html">Register Here</p>
- 
+      <div class="field">
+  <input type="text" id="username" required placeholder=" " />
+  <label>Username</label>
+</div>
 
-  <p id="error" style="color:red;"></p>
+<div class="field">
+  <input type="password" id="password" required placeholder=" " />
+  <label>Password</label>
+</div>
 
-  <script>
-    async function login() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
 
-      const res = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-      });
+      <button onclick="login()">Login</button>
 
-      if (res.ok) {
-        window.location.href = "/index.html"; // open todo app
-      } else {
-        document.getElementById("error").innerText = "Invalid login";
-      }
-    }
-  
-  </script>
+      <p class="link">
+        New user? <a href="/register.html">Register</a>
+      </p>
+
+      <p id="error" class="error"></p>
+    </div>
+  </div>
+
+<script src="login.js"></script>
 </body>
 </html>
