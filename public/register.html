@@ -183,7 +183,10 @@ button:hover {
 
       const data = await res.json();
 
-      document.getElementById("msg").innerText = data.message || alert(data.message);
+     if(res.status === 409){
+       alert("User already Exists!)
+             return;
+     }
     }
   </script>
 </body>
