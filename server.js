@@ -23,7 +23,7 @@ const TodoSchema = new mongoose.Schema({
   default: "active"
 },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
-}); //creating schema for todo items
+}, { timestamps: true }); //creating schema for todo items
 
 const Todo = mongoose.model("Todo", TodoSchema); //building a model for todo items data using the respective schema
 
