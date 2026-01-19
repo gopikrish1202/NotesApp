@@ -85,7 +85,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // CREATE TODO
 app.post("/todos", async (req, res) => {
   try {
-    const { name, userId } = req.body;
+    const { name, userId, status } = req.body;
 
     if (!name || !userId) {
       return res.status(400).json({ message: "name and userId required" });
@@ -93,16 +93,18 @@ app.post("/todos", async (req, res) => {
 
     const todo = await Todo.create({
       name,
-      status: "active",
-      userId
+      userId,
+      status: status || "active"
     });
 
     res.status(201).json(todo);
 
   } catch (err) {
+    console.error("Create todo error:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // GET TODOS FOR LOGGED-IN USER ✅
 app.get("/todos/user/:userId", async (req, res) => {
