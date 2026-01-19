@@ -169,6 +169,28 @@ button:hover {
     </div>
   </div>
 
-<script src="login.js"></script>
+<script>
+async function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, password })
+  });
+
+  if (res.ok) {
+    window.location.href = "/index.html";
+  } else {
+    const errorEl = document.getElementById("error");
+    errorEl.innerText = "Invalid username or password";
+    errorEl.classList.add("show");
+  }
+}
+</script>
+
 </body>
 </html>
