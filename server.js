@@ -112,10 +112,11 @@ app.get("/todos/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const todos = await Todo.find({
-  userId,
+   const todos = await Todo.find({
+  userId: new mongoose.Types.ObjectId(userId),
   status: { $in: ["active", "completed", "archived"] }
 });
+
 
     
     res.json(todos);
