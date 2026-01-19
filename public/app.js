@@ -43,6 +43,18 @@ async function loadTodos() {
     checkbox.addEventListener("change", () => {
       toggleTodo(todo._id, checkbox.checked);
     });
+// --- Delete icon ---
+const deleteBtn = document.createElement("span");
+deleteBtn.textContent = "🗑️";
+deleteBtn.style.cursor = "pointer";
+deleteBtn.style.marginLeft = "10px";
+
+deleteBtn.addEventListener("click", () => {
+  deleteTodo(todo._id);
+});
+
+
+
 
     // --- Status label ---
     const label = document.createElement("span");
@@ -51,6 +63,7 @@ async function loadTodos() {
     li.appendChild(nameInput);
     li.appendChild(checkbox);
     li.appendChild(label);
+    li.appendChild(deleteBtn);
 
     list.appendChild(li);
   });
@@ -116,5 +129,16 @@ async function toggleTodo(id, status) {
   loadTodos();
 }
 
+async function deleteTodo(id) {
+  const res = await fetch(`/todos/${id}`, {
+    method: "DELETE"
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Failed to delete todo:", text);
+    return;
+  }
+  loadTodos();
+}
 // ---------------- INITIAL LOAD ----------------
 loadTodos();
