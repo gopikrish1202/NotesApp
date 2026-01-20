@@ -99,13 +99,18 @@ async function addTodo() {
 
   if (!input.value.trim() || !userId) return;
 
+  if (!userId || userId.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userId)) {
+  alert("Invalid or missing user ID. Please log in again.");
+  return;
+}
+
   const res = await fetch("/todos", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name: input.value.trim(),
-      userId: userId
-      // status: "active"
+      userId: userId,
+      status: "active"
     })
   });
 
