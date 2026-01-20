@@ -1,3 +1,4 @@
+// ---------------- IMPORTS ----------------
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -5,193 +6,186 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-// ── SCHEMAS ────────────────────────────────────────────────
+// ---------------- USER SCHEMA ----------------
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
-});
+}); //creating schema for user
 
+const User = mongoose.model("User", UserSchema); //building a model using the schema
+
+// ---------------- TODO SCHEMA ----------------
 const TodoSchema = new mongoose.Schema({
   name: { type: String, required: true },
   status: {
-    type: String,
-    enum: ["active", "completed", "archived", "deleted"],
-    default: "active"
-  },
+  type: String,
+  enum: ["active", "completed", "archived", "deleted"],
+  default: "active"
+},
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
-}, { timestamps: true });
+}, { timestamps: true }); //creating schema for todo items
 
-const User = mongoose.model("User", UserSchema);
-const Todo = mongoose.model("Todo", TodoSchema);
+const Todo = mongoose.model("Todo", TodoSchema); //building a model for todo items data using the respective schema
 
-// ── AUTH ROUTES ────────────────────────────────────────────
+// ---------------- AUTH ROUTES ----------------
+
+// REGISTER
 app.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
+
     if (!username || !password) {
-      return res.status(400).json({ message: "Username and password required" });
+      return res.status(400).json({ message: "All fields required" });
     }
 
-    const existing = await User.findOne({ username });
-    if (existing) {
-      return res.status(409).json({ message: "Username already exists" });
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(409).json({ message: "User already exists" });
     }
 
     await User.create({ username, password });
+
     res.status(201).json({ message: "User registered successfully" });
+
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
+// LOGIN
 app.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ username, password });
+    const { username, password } = req.body; //getting username and password from req body
+
+    const user = await User.findOne({ username, password }); //comparing with the database, using the schema instance
     if (!user) {
-      return res.status(401).json({ message: "Invalid username or password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     res.status(200).json({
       message: "Login successful",
-      userId: user._id.toString(),
+      userId: user._id,
       username: user.username
     });
+
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ── TODO ROUTES ────────────────────────────────────────────
+// ---------------- UI ROUTES ----------------
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/login.html"));
+});
+
+app.use(express.static(path.join(__dirname, "public")));
+
+// ---------------- TODO ROUTES ----------------
+
+// CREATE TODO
 app.post("/todos", async (req, res) => {
   try {
     const { name, userId, status } = req.body;
 
-    if (!name?.trim()) {
-      return res.status(400).json({ message: "Todo name is required" });
-    }
-    if (!userId) {
-      return res.status(400).json({ message: "userId is required" });
-    }
-
-    let todoUserId;
-    try {
-      todoUserId = new mongoose.Types.ObjectId(userId);
-    } catch {
-      return res.status(400).json({ message: "Invalid userId format" });
+    if (!name || !userId) {
+      return res.status(400).json({ message: "name and userId required" });
     }
 
     const todo = await Todo.create({
       name: name.trim(),
       status: status || "active",
-      userId: todoUserId
+      userId: new mongoose.Types.ObjectId(userId)
     });
 
     res.status(201).json(todo);
+
   } catch (err) {
-    console.error("Create todo error:", err);
+    console.error("Create todo validation error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
+
+
+// GET TODOS FOR LOGGED-IN USER ✅
 app.get("/todos/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-    let queryUserId;
-    try {
-      queryUserId = new mongoose.Types.ObjectId(userId);
-    } catch {
-      return res.status(400).json({ message: "Invalid userId" });
-    }
+   const todos = await Todo.find({
+  userId: new mongoose.Types.ObjectId(userId),
+  status: { $in: ["active", "completed", "archived"] }
+});
 
-    const todos = await Todo.find({
-      userId: queryUserId,
-      status: { $in: ["active", "completed", "archived"] }
-    }).sort({ updatedAt: -1 });
 
+    
     res.json(todos);
+
   } catch (err) {
-    console.error("Get todos error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
+// UPDATE TODO
 app.put("/todos/:id", async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ message: "Invalid todo ID" });
+      return res.status(400).json({ message: "Invalid ID" });
     }
 
-    const updateData = {};
-    if (req.body.name !== undefined) {
-      if (!req.body.name.trim()) {
-        return res.status(400).json({ message: "Name cannot be empty" });
-      }
-      updateData.name = req.body.name.trim();
-    }
-    if (req.body.status !== undefined) {
-      if (!["active", "completed", "archived", "deleted"].includes(req.body.status)) {
-        return res.status(400).json({ message: "Invalid status value" });
-      }
-      updateData.status = req.body.status;
-    }
+  const updateData = {};
+if (req.body.name !== undefined) updateData.name = req.body.name;
+if (req.body.status !== undefined) updateData.status = req.body.status;
 
-    const updated = await Todo.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    );
+const updatedTodo = await Todo.findByIdAndUpdate(
+  req.params.id,
+  updateData,
+  { new: true }
+);
 
-    if (!updated) {
+
+    if (!updatedTodo) {
       return res.status(404).json({ message: "Todo not found" });
     }
 
-    res.json(updated);
+    res.json(updatedTodo);
+
   } catch (err) {
-    console.error("Update error:", err);
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// Optional: permanent delete route (not used by frontend yet)
+// DELETE TODO
 app.delete("/todos/:id", async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid ID" });
     }
-    const deleted = await Todo.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Todo not found" });
-    res.json({ message: "Todo permanently deleted" });
+
+    const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
+    if (!deletedTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+
+    res.json({ message: "Todo deleted successfully" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// ── SERVE FRONTEND ─────────────────────────────────────────
-// IMPORTANT: Login route first → overrides any index.html
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html"));
-});
 
-// Serve all static files (css, js, images, etc.)
-app.use(express.static(path.join(__dirname, "public")));
 
-// Catch-all → fallback to login (in case someone types /something)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html"));
-});
-
-// ── DATABASE & SERVER START ────────────────────────────────
+// ---------------- DB CONNECTION ----------------
 mongoose.connect(
-  "mongodb+srv://gurramsriranga1202_db_user:mCnenO3B0CJePEwL@nodecluster1202.a98coqp.mongodb.net/todos?retryWrites=true&w=majority"
+  "mongodb+srv://gurramsriranga1202_db_user:mCnenO3B0CJePEwL@nodecluster1202.a98coqp.mongodb.net/todos"
 )
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch(err => console.error("MongoDB connection failed:", err));
+.then(() => console.log("MongoDB connected"))
+.catch(err => console.error(err));
 
+// ---------------- START SERVER ----------------
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on ${PORT}`);
 });
