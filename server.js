@@ -1,4 +1,3 @@
-// ---------------- IMPORTS ----------------
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
@@ -6,58 +5,49 @@ const path = require("path");
 const app = express();
 app.use(express.json());
 
-// ---------------- USER SCHEMA ----------------
+// ---------------- SCHEMAS ----------------
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true }
-}); //creating schema for user
+});
 
-const User = mongoose.model("User", UserSchema); //building a model using the schema
-
-// ---------------- TODO SCHEMA ----------------
 const TodoSchema = new mongoose.Schema({
   name: { type: String, required: true },
   status: {
-  type: String,
-  enum: ["active", "completed", "archived", "deleted"],
-  default: "active"
-},
+    type: String,
+    enum: ["active", "completed", "archived", "deleted"],
+    default: "active"
+  },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
-}, { timestamps: true }); //creating schema for todo items
+}, { timestamps: true });
 
-const Todo = mongoose.model("Todo", TodoSchema); //building a model for todo items data using the respective schema
+const User = mongoose.model("User", UserSchema);
+const Todo = mongoose.model("Todo", TodoSchema);
 
 // ---------------- AUTH ROUTES ----------------
-
-// REGISTER
 app.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     if (!username || !password) {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    const existing = await User.findOne({ username });
+    if (existing) {
       return res.status(409).json({ message: "User already exists" });
     }
 
     await User.create({ username, password });
-
     res.status(201).json({ message: "User registered successfully" });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// LOGIN
 app.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body; //getting username and password from req body
-
-    const user = await User.findOne({ username, password }); //comparing with the database, using the schema instance
+    const { username, password } = req.body;
+    const user = await User.findOne({ username, password });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -67,26 +57,15 @@ app.post("/login", async (req, res) => {
       userId: user._id,
       username: user.username
     });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// ---------------- UI ROUTES ----------------
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/login.html"));
-});
-
-app.use(express.static(path.join(__dirname, "public")));
-
 // ---------------- TODO ROUTES ----------------
-
-// CREATE TODO
 app.post("/todos", async (req, res) => {
   try {
     const { name, userId, status } = req.body;
-
     if (!name || !userId) {
       return res.status(400).json({ message: "name and userId required" });
     }
@@ -98,94 +77,88 @@ app.post("/todos", async (req, res) => {
     });
 
     res.status(201).json(todo);
-
   } catch (err) {
-    console.error("Create todo validation error:", err);
+    console.error("Create todo error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-
-
-// GET TODOS FOR LOGGED-IN USER ✅
 app.get("/todos/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
-   const todos = await Todo.find({
-  userId: new mongoose.Types.ObjectId(userId),
-  status: { $in: ["active", "completed", "archived"] }
-});
+    const todos = await Todo.find({
+      userId: new mongoose.Types.ObjectId(userId),
+      status: { $in: ["active", "completed", "archived"] }   // "deleted" excluded
+    }).sort({ updatedAt: -1 });
 
-
-    
     res.json(todos);
-
   } catch (err) {
+    console.error("Get todos error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// UPDATE TODO
 app.put("/todos/:id", async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid ID" });
     }
 
-  const updateData = {};
-if (req.body.name !== undefined) updateData.name = req.body.name;
-if (req.body.status !== undefined) updateData.status = req.body.status;
+    const updateData = {};
+    if (req.body.name !== undefined) updateData.name = req.body.name.trim();
+    if (req.body.status !== undefined) updateData.status = req.body.status;
 
-const updatedTodo = await Todo.findByIdAndUpdate(
-  req.params.id,
-  updateData,
-  { new: true }
-);
+    const updated = await Todo.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
 
-
-    if (!updatedTodo) {
+    if (!updated) {
       return res.status(404).json({ message: "Todo not found" });
     }
 
-    res.json(updatedTodo);
-
+    res.json(updated);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Update todo error:", err);
+    res.status(400).json({ error: err.message });   // 400 for validation errors
   }
 });
 
-// DELETE TODO
+// Optional: permanent delete (can be used later via admin or cleanup)
 app.delete("/todos/:id", async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid ID" });
     }
 
-    const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
-    if (!deletedTodo) {
+    const deleted = await Todo.findByIdAndDelete(req.params.id);
+    if (!deleted) {
       return res.status(404).json({ message: "Todo not found" });
     }
 
-    res.json({ message: "Todo deleted successfully" });
-
+    res.json({ message: "Todo permanently deleted" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// ---------------- SERVE STATIC FILES & UI ----------------
+app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/login.html"));
+});
 
-// ---------------- DB CONNECTION ----------------
+// ---------------- DB & SERVER START ----------------
 mongoose.connect(
   "mongodb+srv://gurramsriranga1202_db_user:mCnenO3B0CJePEwL@nodecluster1202.a98coqp.mongodb.net/todos"
 )
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.error(err));
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
-// ---------------- START SERVER ----------------
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
