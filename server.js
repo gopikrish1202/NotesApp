@@ -93,7 +93,7 @@ app.post("/todos", async (req, res) => {
 
     const todo = await Todo.create({
       name: name.trim(),
-      status: status || "active",
+      status: "active",
       userId: new mongoose.Types.ObjectId(userId)
     });
 
