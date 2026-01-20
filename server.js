@@ -87,21 +87,41 @@ app.post("/todos", async (req, res) => {
   try {
     const { name, userId, status } = req.body;
 
-    if (!name || !userId) {
-      return res.status(400).json({ message: "name and userId required" });
+    if (!name?.trim()) {
+      return res.status(400).json({ message: "Name is required" });
+    }
+
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required" });
+    }
+
+    let todoUserId;
+    try {
+      todoUserId = new mongoose.Types.ObjectId(userId);
+    } catch (castErr) {
+      return res.status(400).json({ message: "Invalid userId format", error: castErr.message });
     }
 
     const todo = await Todo.create({
       name: name.trim(),
-      status: "active",
-      userId: new mongoose.Types.ObjectId(userId)
+      userId: todoUserId,
+      status: status || "active"   // ← allow frontend to send it (optional)
     });
 
     res.status(201).json(todo);
-
   } catch (err) {
-    console.error("Create todo validation error:", err);
-    res.status(500).json({ error: err.message });
+    console.error("Todo creation failed:", err);
+    
+    if (err.name === 'ValidationError') {
+      const errors = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ message: "Validation failed", details: errors });
+    }
+    
+    if (err.name === 'CastError') {
+      return res.status(400).json({ message: "Invalid ID format", field: err.path });
+    }
+    
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
