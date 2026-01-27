@@ -229,32 +229,31 @@ async function login() {
     return;
   }
 
-  try {
-    const res = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, password })
-    });
+try {
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
 
-    if (!res.ok) {
-      throw new Error("Invalid credentials");
-    }
-
-    const data = await res.json();
-
-    // Store session data
-    localStorage.setItem("userId", data.userId);
-    localStorage.setItem("username", data.username);
-
-    // Redirect after login
-    window.location.href = "/index.html";
-
-  } catch (err) {
-    errorEl.textContent = "Invalid username or password";
-    errorEl.classList.add("show");
+  if (!res.ok) {
+    throw new Error("Invalid credentials");
   }
+
+  const data = await res.json();
+
+  // Store session data
+  localStorage.setItem("userId", data.userId);
+  localStorage.setItem("username", data.username);
+
+  // Redirect after login
+  window.location.href = "/index.html";
+
+} catch (err) {
+  errorEl.textContent = "Invalid username or password";
+  errorEl.classList.add("show");
+}
+
 }
 
 /* ===============================
