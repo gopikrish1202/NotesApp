@@ -108,7 +108,7 @@ async function addTodo() {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    name: todoText,  
+    name: input.value.trim(),   // ✅ CORRECT (must match schema)
     userId: userId
   })
 });
