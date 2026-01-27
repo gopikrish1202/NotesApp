@@ -24,13 +24,187 @@
   padding: 20px;
   border-radius: 10px;
 }
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  min-height: 200vh;
+  margin: 0;
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
+  display: flex;
+  justify-content: center;     /* horizontal center */
+  align-items: flex-start;     /* push content up */
+  padding-top: 40px;           /* adjust ↑↓ here */
+}
+
+
+
+/* ===== CARD CONTAINER ===== */
+.container {
+  width: 300px;
+}
+
+
+/* ===== CARD ===== */
+.card {
+
+  position: relative;
+  height: 700px;
+  overflow: hidden;
+  cursor: pointer;
+
+}
+.card .slide2 {
+  height: 440px;          /* increased */
+         /* more breathing room */
+}
+/* ===== SLIDES (OVERLAPPED AT CENTER) ===== */
+.card .slide {
+  position: absolute;
+  width: 100%;
+  height: 200px;
+  left: 0;
+  top: 50%;                              /* 🔥 START AT CENTER */
+  transform: translateY(-50%);
+  transition: transform 0.8s cubic-bezier(.4,0,.2,1);
+}
+
+/* ===== SLIDE 1 (WELCOME – TOP FLAP) ===== */
+.card .slide1 {
+  background: #2c73df;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.card:hover .slide1 {
+  transform: translateY(-50%);          /* 🔼 MOVE UP */
+}
+
+.card .slide1 h2 {
+  color: #fff;
+  margin: 0;
+}
+
+/* ===== SLIDE 2 (LOGIN – BOTTOM FLAP) ===== */
+.card .slide2 {
+  background: white;
+  padding: 25px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
+.card:hover .slide2 {
+  transform: translateY(50%);            /* 🔽 MOVE DOWN */
+}
+
+
+/* ===== FORM ===== */
+.field {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.field input {
+  width: 100%;
+  padding: 22px 12px 8px;   /* ⬅️ KEY FIX */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  font-size: 15px;
+}
+
+.field label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-size: 13px;
+  color: #777;
+  background: #fff;
+  padding: 0 8px;
+  display: inline-block;      /* 🔥 KEY */
+  line-height: 1.2;           /* 🔥 KEY */
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #2c73df;
+}
+
+/* ===== GLOW BUTTON ===== */
+.glow-btn {
+  width: 100%;
+  padding: 12px;
+  background: #111;
+  border-radius: 8px;
+  border: none;
+  color: #0ff;
+  font-size: 15px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glow-btn span {
+  position: relative;
+  z-index: 3;
+}
+
+/* Border glow */
+.glow-btn::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(0,255,255,0.9),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+/* Inner glow */
+.glow-btn::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(0,255,255,0.6),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease 0.15s;
+}
+
+.glow-btn:hover::before,
+.glow-btn:hover::after {
+  opacity: 1;
+}
   </style>
 <body style="background-color: aquamarine;">
 <header class="app-header">
   <h1>My Todos</h1>
   <p>Stay focused. One task at a time.</p>
 </header>
+ <section>
+  <div class="wave">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
 <div class="app-container">
+    <div class="content">
   <input id="todoInput" />
   <p>Enter values and click Add to create a new item in database</p>
   <button onclick="addTodo()">Add</button>
@@ -38,8 +212,9 @@
   <p>Update existing items</p>
 
   <ul id="todoList"></ul>
+  </div>
 </div>
-
+</section>
   <script src="app.js">document.querySelector("h1").textContent =
   `Hi, ${localStorage.getItem("username")}`;</script>
 </body>
