@@ -73,10 +73,12 @@ statusText.dataset.status = todo.status;   // 🔥 THIS LINE
     archiveBtn.width = 16;
     archiveBtn.className = "icon-btn";
     archiveBtn.title = "Archive";
+archiveBtn.addEventListener("click", () => {
+  const newStatus = todo.status === "archived" ? "active" : "archived";
+  updateStatus(todo._id, newStatus);
+}); 
+//change status to active if already archived on clicking archive button
 
-    archiveBtn.addEventListener("click", () => {
-      updateStatus(todo._id, "archived");
-    });
 
     // ===== DELETE BUTTON (now soft delete) =====
     const deleteBtn = document.createElement("span");
@@ -151,6 +153,7 @@ async function updateTodo(id, newName) {
 
 // ---------------- UPDATE STATUS (completed, archived, deleted) ----------------
 async function updateStatus(id, status) {
+  if(status!="deleted"){
   const res = await fetch(`/todos/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -163,6 +166,17 @@ async function updateStatus(id, status) {
     return;
   }
   loadTodos();
+}
+else{
+  const res = await fetch(`/todos/${id}`, {
+    method: "DELETE"
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Failed to delete todo:", text);
+    return;
+  }
+}
 }
 
 // ---------------- INITIAL LOAD ----------------
