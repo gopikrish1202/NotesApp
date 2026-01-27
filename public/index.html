@@ -1,5 +1,23 @@
 <!DOCTYPE html>
 <html>
+  <style>
+    .status-text {
+  font-size: 11px;
+  color: #666;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  text-transform: uppercase;
+}
+.status-text[data-status="completed"] {
+  background: #d4edda;
+  color: #155724;
+}
+.status-text[data-status="archived"] {
+  background: #ffeeba;
+  color: #856404;
+}
+  </style>
 <body style="background-color: aquamarine;">
   <h1>Todo App</h1>
 

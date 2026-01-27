@@ -58,6 +58,14 @@ async function loadTodos() {
       updateTodo(todo._id, nameInput.value);
     });
 
+
+    // ===== STATUS TEXT =====
+const statusText = document.createElement("span");
+statusText.className = "status-text";
+statusText.textContent = todo.status.toUpperCase();
+statusText.dataset.status = todo.status;   // 🔥 THIS LINE
+
+
     // ===== ARCHIVE BUTTON =====
     const archiveBtn = document.createElement("img");
     archiveBtn.src =
@@ -85,6 +93,7 @@ async function loadTodos() {
     // ===== APPEND =====
     li.appendChild(statusIcon);
     li.appendChild(nameInput);
+    li.appendChild(statusText);  
     li.appendChild(archiveBtn);
     li.appendChild(deleteBtn);
 
