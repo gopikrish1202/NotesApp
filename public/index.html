@@ -17,10 +17,20 @@
   background: #ffeeba;
   color: #856404;
 }
+.app-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: lightcoral;
+  padding: 20px;
+  border-radius: 10px;
+}
   </style>
 <body style="background-color: aquamarine;">
-  <h1>Todo App</h1>
-
+<header class="app-header">
+  <h1>My Todos</h1>
+  <p>Stay focused. One task at a time.</p>
+</header>
+<div class="app-container">
   <input id="todoInput" />
   <p>Enter values and click Add to create a new item in database</p>
   <button onclick="addTodo()">Add</button>
@@ -28,7 +38,9 @@
   <p>Update existing items</p>
 
   <ul id="todoList"></ul>
+</div>
 
-  <script src="app.js"></script>
+  <script src="app.js">document.querySelector("h1").textContent =
+  `Hi, ${localStorage.getItem("username")}`;</script>
 </body>
 </html>
