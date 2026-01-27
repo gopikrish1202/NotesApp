@@ -105,14 +105,14 @@ async function addTodo() {
 }
 
   const res = await fetch("/todos", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: input.value.trim(),
-      userId: userId,
-      status: "active"
-    })
-  });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name: todoText,  
+    userId: userId
+  })
+});
+
 
   if (!res.ok) {
     const text = await res.text();
