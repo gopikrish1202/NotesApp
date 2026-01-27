@@ -2,6 +2,7 @@
 <html>
 <head>
 <style>
+/* ================= BASE ================= */
 * {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
@@ -10,77 +11,94 @@
 body {
   min-height: 200vh;
   margin: 0;
-  background: linear-gradient(135deg, #6dd5fa, #2980b9);
   display: flex;
-  justify-content: center;     /* horizontal center */
-  align-items: flex-start;     /* push content up */
-  padding-top: 40px;           /* adjust ↑↓ here */
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+  background: transparent;
 }
 
-
-
-/* ===== CARD CONTAINER ===== */
+/* ================= CARD CONTAINER ================= */
 .container {
   width: 300px;
 }
 
-
-/* ===== CARD ===== */
+/* ================= CARD ================= */
 .card {
-
   position: relative;
   height: 700px;
   overflow: hidden;
   cursor: pointer;
+  overflow: hidden;
+}
 
-}
-.card .slide2 {
-  height: 440px;          /* increased */
-         /* more breathing room */
-}
-/* ===== SLIDES (OVERLAPPED AT CENTER) ===== */
+/* ================= SLIDES (COMMON) ================= */
 .card .slide {
   position: absolute;
   width: 100%;
   height: 200px;
   left: 0;
-  top: 50%;                              /* 🔥 START AT CENTER */
-  transform: translateY(-50%);
-  transition: transform 0.8s cubic-bezier(.4,0,.2,1);
+  transition:
+    transform 2s cubic-bezier(.4,0,.2,1),
+    opacity 1s ease,
+    visibility 1s ease;
 }
 
-/* ===== SLIDE 1 (WELCOME – TOP FLAP) ===== */
+/* ================= SLIDE 1 ================= */
 .card .slide1 {
-  background: #2c73df;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 130px;            /* fixed header height */
+  background: rgba(255, 255, 0, 0.461);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   z-index: 2;
 }
 
-.card:hover .slide1 {
-  transform: translateY(-50%);          /* 🔼 MOVE UP */
-}
 
-.card .slide1 h2 {
-  color: #fff;
-  margin: 0;
-}
-
-/* ===== SLIDE 2 (LOGIN – BOTTOM FLAP) ===== */
+/* ================= SLIDE 2 ================= */
 .card .slide2 {
+  position: absolute;
+  top: 130px;               /* exactly below slide-1 */
+  left: 0;
+  width: 100%;
+  height: calc(100% - 130px);
+
   background: white;
   padding: 25px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+
   z-index: 1;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-30px);
+
+  transition:
+    transform 2s ease,
+    opacity 1s ease,
+    visibility 1s ease;
 }
 
+
+
+/* ================= HOVER STATE ================= */
 .card:hover .slide2 {
-  transform: translateY(50%);            /* 🔽 MOVE DOWN */
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 
-/* ===== FORM ===== */
+
+/* ================= FORM ================= */
 .field {
   position: relative;
   margin-bottom: 20px;
@@ -88,7 +106,7 @@ body {
 
 .field input {
   width: 100%;
-  padding: 22px 12px 8px;   /* ⬅️ KEY FIX */
+  padding: 22px 12px 8px;
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
@@ -103,12 +121,10 @@ body {
   color: #777;
   background: #fff;
   padding: 0 8px;
-  display: inline-block;      /* 🔥 KEY */
-  line-height: 1.2;           /* 🔥 KEY */
+  line-height: 1.2;
   pointer-events: none;
   transition: all 0.25s ease;
 }
-
 
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
@@ -117,7 +133,7 @@ body {
   color: #2c73df;
 }
 
-/* ===== GLOW BUTTON ===== */
+/* ================= GLOW BUTTON ================= */
 .glow-btn {
   width: 100%;
   padding: 12px;
@@ -137,7 +153,6 @@ body {
   z-index: 3;
 }
 
-/* Border glow */
 .glow-btn::before {
   content: "";
   position: absolute;
@@ -151,7 +166,6 @@ body {
   transition: opacity 0.25s ease;
 }
 
-/* Inner glow */
 .glow-btn::after {
   content: "";
   position: absolute;
@@ -169,6 +183,77 @@ body {
 .glow-btn:hover::after {
   opacity: 1;
 }
+
+/* ================= ANIMATED BACKGROUND ================= */
+@property --a {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+@property --p {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+@property --c1 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #000;
+}
+@property --c2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #000;
+}
+
+html {
+  --s: 80px;
+  --_g: #0000, var(--c1) 2deg calc(var(--a) - 2deg), #0000 var(--a);
+  background:
+    conic-gradient(from calc(-45deg - var(--a)/2) at top var(--p) left var(--p), var(--_g)),
+    conic-gradient(from calc(-45deg - var(--a)/2) at top var(--p) left var(--p), var(--_g)),
+    conic-gradient(from calc(45deg - var(--a)/2) at top var(--p) right var(--p), var(--_g)),
+    conic-gradient(from calc(45deg - var(--a)/2) at top var(--p) right var(--p), var(--_g)),
+    conic-gradient(from calc(-135deg - var(--a)/2) at bottom var(--p) left var(--p), var(--_g)),
+    conic-gradient(from calc(-135deg - var(--a)/2) at bottom var(--p) left var(--p), var(--_g)),
+    conic-gradient(from calc(135deg - var(--a)/2) at bottom var(--p) right var(--p), var(--_g)),
+    conic-gradient(from calc(135deg - var(--a)/2) at bottom var(--p) right var(--p), var(--_g))
+    var(--c2);
+  background-size: calc(2 * var(--s)) calc(2 * var(--s));
+  animation: m 2s infinite alternate linear;
+}
+
+@keyframes m {
+  0%, 15% {
+    --a: 135deg;
+    --p: 20%;
+    --c1: #3B8183;
+    --c2: #FAD089;
+    background-position: 0 0, var(--s) var(--s);
+  }
+  45%, 50% {
+    --a: 90deg;
+    --p: 25%;
+    --c1: #3B8183;
+    --c2: #FAD089;
+    background-position: 0 0, var(--s) var(--s);
+  }
+  50.01%, 55% {
+    --a: 90deg;
+    --p: 25%;
+    --c2: #3B8183;
+    --c1: #FAD089;
+    background-position: var(--s) 0, 0 var(--s);
+  }
+  85%, 100% {
+    --a: 135deg;
+    --p: 20%;
+    --c2: #3B8183;
+    --c1: #FAD089;
+    background-position: var(--s) 0, 0 var(--s);
+  }
+}
+
 </style>
  <title>Login</title>
 
@@ -180,9 +265,12 @@ body {
   <div class="card">
 
     <!-- SLIDE 1 -->
-    <div class="slide slide1">
-      <h1>WELCOME</h1>
-      <h2>Notes App Login</h2>
+     <div class="slide slide1">
+     <table>
+      <tr><th style="font-size: 24pt;">WELCOME! </th></tr>
+      <tr><th style="font-size: 20pt;">Notes App Login</th></tr>
+      </table>
+      
     </div>
 
     <!-- SLIDE 2 -->
