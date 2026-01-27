@@ -102,6 +102,7 @@ app.post("/todos", async (req, res) => {
     } catch (castErr) {
       return res.status(400).json({ message: "Invalid userId format", error: castErr.message });
     }
+console.log("REQ BODY:", req.body);
 
     const todo = await Todo.create({
       name: name.trim(),
