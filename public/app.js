@@ -176,6 +176,7 @@ else{
     console.error("Failed to delete todo:", text);
     return;
   }
+  loadTodos();
 }
 }
 
