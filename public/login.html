@@ -363,6 +363,19 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.style.removeProperty("--y");
   });
 });
+  window.onload = function () {
+  speakMessage("Please enter your login ID and password");
+};
+
+function speakMessage(text) {
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-UK";   // Change language if needed
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  window.speechSynthesis.speak(speech);
+}
+
 </script>
 
 
