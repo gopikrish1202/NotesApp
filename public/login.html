@@ -363,9 +363,17 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.style.removeProperty("--y");
   });
 });
-  window.onload = function () {
+ let spoken = false;
+
+function enableVoice() {
+  if (spoken) return;
+  spoken = true;
   speakMessage("Please enter your login ID and password");
-};
+}
+
+// Speak after first click anywhere
+document.addEventListener("click", enableVoice);
+document.addEventListener("keydown", enableVoice);
 
 function speakMessage(text) {
   const speech = new SpeechSynthesisUtterance(text);
