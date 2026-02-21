@@ -74,10 +74,13 @@ body {
 /* ================= APP CONTAINER (CARD) ================= */
 .app-container {
   position: relative;
-  z-index: 2; /* 🔥 ensures app stays above wave */
+  z-index: 2;
   max-width: 600px;
   width: 90%;
-  background: lightcoral;
+  background: rgba(255, 255, 255, 0.15);  /* ✅ transparent but visible */
+  backdrop-filter: blur(12px);             /* ✅ frosted glass effect */
+  -webkit-backdrop-filter: blur(12px);     /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.25); /* subtle border */
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
@@ -200,7 +203,7 @@ button:hover {
   opacity: 1;
 }
        ul {
-      width: 400px;
+      width: 800px;
       list-style: none;
       margin: 0;
       padding: 0;
@@ -343,5 +346,6 @@ button:hover {
   </script>
 </body>
 </html>
+
 
 
