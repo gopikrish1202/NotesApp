@@ -200,6 +200,8 @@ app.delete("/todos/:id", async (req, res) => {
 // Spotify token exchange
 app.post("/spotify/token", async (req, res) => {
   const { code, verifier } = req.body;
+    console.log('Code:', code);        // ADD THIS
+  console.log('Verifier:', verifier); // ADD THIS
 
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
@@ -214,6 +216,7 @@ app.post("/spotify/token", async (req, res) => {
   });
 
   const data = await response.json();
+    console.log('Spotify response:', data); // ADD THIS
   res.json(data);
 });
 
@@ -249,4 +252,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on ${PORT}`);
 });
+
 
