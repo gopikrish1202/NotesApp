@@ -224,6 +224,74 @@ button:hover {
 </section>
 
   <script src="app.js">document.querySelector("h1").textContent =
-  `Hi, ${localStorage.getItem("username")}`;</script>
+  `Hi, ${localStorage.getItem("username")}`;
+    
+  function attachDragEvents(li, index) {
+    const handle = li.querySelector(".drag-handle");
+
+    // Only allow drag when handle is clicked
+    handle.addEventListener("mousedown", () => li.draggable = true);
+    document.addEventListener("mouseup",  () => li.draggable = false);
+
+    // 1. Drag starts — remember which item
+    li.addEventListener("dragstart", () => {
+      dragSrcIndex = index;
+      setTimeout(() => li.classList.add("dragging"), 0);
+    });
+
+    // 2. Drag ends — clean up
+    li.addEventListener("dragend", () => {
+      li.draggable = false;
+      li.classList.remove("dragging");
+      clearIndicators();
+    });
+
+    // 3. Hovering over a target item — show blue line
+    li.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      clearIndicators();
+
+      const midY = li.getBoundingClientRect().top + li.offsetHeight / 2;
+      if (e.clientY < midY) {
+        li.classList.add("drop-above");   // cursor top half → line above
+      } else {
+        li.classList.add("drop-below");   // cursor bottom half → line below
+      }
+    });
+
+    li.addEventListener("dragleave", clearIndicators);
+
+    // 4. Drop — swap in data array and re-render
+    li.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const targetIndex = parseInt(li.dataset.index);
+      if (dragSrcIndex === null || dragSrcIndex === targetIndex) return;
+
+      // Find insert position based on cursor half
+      const midY = li.getBoundingClientRect().top + li.offsetHeight / 2;
+      let insertAt = e.clientY < midY ? targetIndex : targetIndex + 1;
+
+      // Remove dragged item, insert at new position
+      const [moved] = data.splice(dragSrcIndex, 1);
+      if (insertAt > dragSrcIndex) insertAt--;
+      data.splice(insertAt, 0, moved);
+
+      renderList();
+
+      // Flash the dropped item green
+      const items = list.querySelectorAll("li");
+      items[insertAt]?.classList.add("dropped");
+    });
+  }
+
+  // ── HELPERS ───────────────────────────────────────────
+  function clearIndicators() {
+    list.querySelectorAll("li").forEach(item => {
+      item.classList.remove("drop-above", "drop-below");
+    });
+  }
+  
+  </script>
 </body>
 </html>
+
