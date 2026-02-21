@@ -1,6 +1,8 @@
 // ---------------- IMPORTS ----------------
 const express = require("express");
 const mongoose = require("mongoose");
+const crypto = require('crypto');
+const verifierStore = {};
 const path = require("path");
 
 const app = express();
@@ -196,27 +198,33 @@ app.delete("/todos/:id", async (req, res) => {
   }
 });
 
+app.get('/spotify/verifier', (req, res) => {
+  const verifier = crypto.randomBytes(32).toString('base64url');
+  const id = crypto.randomBytes(8).toString('hex');
+  verifierStore[id] = verifier;
+  const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
+  res.json({ id, challenge });
+});
 
 // Spotify token exchange
-app.post("/spotify/token", async (req, res) => {
-  const { code, verifier } = req.body;
-    console.log('Code:', code);        // ADD THIS
-  console.log('Verifier:', verifier); // ADD THIS
-
+app.post('/spotify/token', async (req, res) => {
+  const { code, verifierId } = req.body;
+  const verifier = verifierStore[verifierId];
+  delete verifierStore[verifierId];
+  console.log('Verifier:', verifier);
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       client_id: "94ff9c27f9504532bd581889da836a0f",
       grant_type: "authorization_code",
-      code: code,
+      code,
       redirect_uri: "https://notesapp-bscc.onrender.com/index.html",
       code_verifier: verifier
     })
   });
-
   const data = await response.json();
-    console.log('Spotify response:', data); // ADD THIS
+  console.log('Spotify response:', data);
   res.json(data);
 });
 
@@ -252,5 +260,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on ${PORT}`);
 });
+
 
 
