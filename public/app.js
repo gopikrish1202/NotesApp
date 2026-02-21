@@ -92,13 +92,18 @@ archiveBtn.addEventListener("click", () => {
       }
     });
 
+    const brailleScrollIcon=document.createElement("span");
+    brailleScrollIcon.textContent="⠿";
+    brailleScrollIcon.className="drag-handle";
+
     // ===== APPEND =====
+    li.appendChild(brailleScrollIcon);
     li.appendChild(statusIcon);
     li.appendChild(nameInput);
     li.appendChild(statusText);  
     li.appendChild(archiveBtn);
     li.appendChild(deleteBtn);
-
+ attachDragEvents(li, index);
     list.appendChild(li);
   });
 }
@@ -181,4 +186,5 @@ else{
 }
 
 // ---------------- INITIAL LOAD ----------------
+
 loadTodos();
