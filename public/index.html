@@ -520,6 +520,7 @@ async function exchangeToken(code) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code, verifier })
     });
+  
 
     const data = await response.json();
     if (data.access_token) {
@@ -668,17 +669,36 @@ const response = await fetch('/spotify/refresh', {
     player.seek(Math.floor(pct * currentDuration));
   }
 
-  // ── ON LOAD: Check for auth code or existing token ──
-  window.addEventListener('load', () => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
 
-    if (code) {
+
+// ── ON LOAD: Check for auth code or existing token ──
+  window.addEventListener('load', () => {
+    console.log('--- PAGE LOADED ---');
+    console.log('Search:', window.location.search);
+
+    const params = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+
+    const code = params.get('code');
+    const hashToken = hashParams.get('access_token');
+
+    console.log('Code found:', code);
+    console.log('Hash token found:', hashToken);
+
+    if (hashToken) {
+      localStorage.setItem('spotify_token', hashToken);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      document.getElementById('spotify-login-area').style.display = 'none';
+      document.getElementById('spotify-player-area').style.display = 'block';
+      setStatus('Connecting...', false);
+      initSpotifyPlayer(hashToken);
+    } else if (code) {
+      console.log('Calling exchangeToken...');
       exchangeToken(code);
     } else {
       const token = localStorage.getItem('spotify_token');
+      console.log('Stored token:', token ? 'EXISTS' : 'NULL');
       if (token) {
-        // SDK ready fires after this, handled by onSpotifyWebPlaybackSDKReady
         document.getElementById('spotify-login-area').style.display = 'none';
         document.getElementById('spotify-player-area').style.display = 'block';
         setStatus('Connecting...', false);
@@ -686,7 +706,6 @@ const response = await fetch('/spotify/refresh', {
     }
   });
 
-  // ── TODO LOGIC (your existing app.js logic inline) ──
   document.getElementById("greeting").textContent =
     username ? `Hi, ${username} 👋` : 'My Todos';
 
@@ -697,5 +716,6 @@ const response = await fetch('/spotify/refresh', {
 
 </body>
 </html>
+
 
 
