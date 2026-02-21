@@ -9,7 +9,6 @@
 
     :root {
       --blue: #2c73df;
-      --dark: #1a1a2e;
       --glass: rgba(255,255,255,0.13);
       --glass-border: rgba(255,255,255,0.22);
       --spotify-green: #1DB954;
@@ -21,7 +20,6 @@
       font-family: 'DM Sans', sans-serif;
     }
 
-    /* ── WAVE ── */
     .hero {
       position: relative;
       width: 100%;
@@ -58,7 +56,6 @@
       100% { transform: translate(-50%, -75%) rotate(360deg); }
     }
 
-    /* ── LAYOUT ── */
     .main-layout {
       position: relative;
       z-index: 2;
@@ -69,7 +66,6 @@
       gap: 20px;
     }
 
-    /* ── CARD ── */
     .card {
       background: var(--glass);
       backdrop-filter: blur(16px);
@@ -80,88 +76,42 @@
       padding: 24px;
     }
 
-    /* ── HEADER ── */
-    .app-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    .app-header { text-align: center; margin-bottom: 20px; }
+    .app-header h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 30px; color: white; }
+    .app-header p { color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 4px; }
 
-    .app-header h1 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 30px;
-      color: white;
-    }
-
-    .app-header p {
-      color: rgba(255,255,255,0.8);
-      font-size: 14px;
-      margin-top: 4px;
-    }
-
-    /* ── TODO INPUT ── */
     #todoInput {
-      width: 100%;
-      padding: 10px 14px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
+      width: 100%; padding: 10px 14px; margin-bottom: 10px;
+      border-radius: 8px; border: 1px solid #ccc;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
     }
 
     button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background: var(--blue);
-      color: white;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
+      padding: 8px 16px; border: none; border-radius: 8px;
+      background: var(--blue); color: white; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
     }
-
     button:hover { background: #1f5fcc; }
 
-    /* ── TODO LIST ── */
-    #todoList {
-      list-style: none;
-      margin-top: 14px;
-    }
+    #todoList { list-style: none; margin-top: 14px; }
 
     .todo-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #fafafa;
-      padding: 8px 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
-      transition: background 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      background: #fafafa; padding: 8px 10px;
+      border-radius: 8px; margin-bottom: 8px; transition: background 0.2s;
     }
-
     .todo-item:hover { background: #f0f0f0; }
 
     .todo-text {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
+      flex: 1; border: none; outline: none;
+      background: transparent; font-size: 14px; font-family: 'DM Sans', sans-serif;
     }
-
     .todo-text.completed { text-decoration: line-through; color: #888; }
 
     .status-text {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: #f0f0f0;
-      color: #555;
-      text-transform: uppercase;
+      font-size: 11px; padding: 2px 6px; border-radius: 4px;
+      background: #f0f0f0; color: #555; text-transform: uppercase;
     }
-
     .status-text[data-status="completed"] { background: #d4edda; color: #155724; }
     .status-text[data-status="archived"]  { background: #ffeeba; color: #856404; }
     .status-text[data-status="active"]    { background: #e7f3ff; color: #084298; }
@@ -169,226 +119,220 @@
     .icon-btn { cursor: pointer; opacity: 0.7; }
     .icon-btn:hover { opacity: 1; }
 
-    /* ── SPOTIFY PLAYER CARD ── */
+    /* ── SPOTIFY CARD ── */
     .spotify-card {
       background: linear-gradient(135deg, rgba(0,0,0,0.55), rgba(29,185,84,0.18));
       border: 1px solid rgba(29,185,84,0.3);
     }
 
     .spotify-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
+      display: flex; align-items: center;
+      gap: 10px; margin-bottom: 18px;
     }
 
-    .spotify-logo {
-      width: 28px; height: 28px;
-    }
+    .spotify-logo { width: 28px; height: 28px; }
 
     .spotify-header h2 {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: white;
-      font-size: 18px;
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      color: white; font-size: 18px; flex: 1;
     }
 
-    /* Login state */
-    #spotify-login-area {
-      text-align: center;
+    .search-icon-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      width: 34px; height: 34px; padding: 0;
+      display: none; align-items: center; justify-content: center;
+      color: white; cursor: pointer; transition: background 0.2s;
     }
+    .search-icon-btn:hover { background: rgba(255,255,255,0.25); }
 
-    #spotify-login-area p {
-      color: rgba(255,255,255,0.75);
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
+    #spotify-login-area { text-align: center; }
+    #spotify-login-area p { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 14px; }
 
     #login-btn {
-      background: var(--spotify-green);
-      color: white;
-      font-weight: 600;
-      padding: 10px 24px;
-      border-radius: 50px;
-      font-size: 14px;
-      letter-spacing: 0.5px;
+      background: var(--spotify-green); color: white; font-weight: 600;
+      padding: 10px 24px; border-radius: 50px; font-size: 14px; letter-spacing: 0.5px;
     }
-
     #login-btn:hover { background: #17a349; }
 
-    /* Player state */
     #spotify-player-area { display: none; }
 
-    .now-playing {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
+    .now-playing { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
 
     #album-art {
-      width: 58px; height: 58px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: rgba(255,255,255,0.1);
-      flex-shrink: 0;
+      width: 58px; height: 58px; border-radius: 8px;
+      object-fit: cover; background: rgba(255,255,255,0.1); flex-shrink: 0;
     }
 
     .track-info { flex: 1; overflow: hidden; }
 
     #track-name {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      color: white;
-      font-size: 15px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-family: 'Syne', sans-serif; font-weight: 700; color: white;
+      font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
     #artist-name {
-      color: rgba(255,255,255,0.65);
-      font-size: 13px;
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      color: rgba(255,255,255,0.65); font-size: 13px; margin-top: 2px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Progress bar */
     .progress-wrap {
-      position: relative;
-      height: 4px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 4px;
-      margin-bottom: 16px;
-      cursor: pointer;
+      position: relative; height: 4px;
+      background: rgba(255,255,255,0.2); border-radius: 4px;
+      margin-bottom: 16px; cursor: pointer;
     }
 
     #progress-bar {
-      height: 100%;
-      background: var(--spotify-green);
-      border-radius: 4px;
-      width: 0%;
-      transition: width 0.5s linear;
+      height: 100%; background: var(--spotify-green);
+      border-radius: 4px; width: 0%; transition: width 0.5s linear;
     }
 
     .time-row {
-      display: flex;
-      justify-content: space-between;
-      color: rgba(255,255,255,0.5);
-      font-size: 11px;
-      margin-top: 5px;
+      display: flex; justify-content: space-between;
+      color: rgba(255,255,255,0.5); font-size: 11px; margin-top: 5px;
     }
 
-    /* Controls */
-    .controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-    }
+    .controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
 
     .ctrl-btn {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
+      background: none; border: none; padding: 0; cursor: pointer;
       color: rgba(255,255,255,0.75);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: color 0.2s, transform 0.15s;
     }
-
     .ctrl-btn:hover { color: white; transform: scale(1.15); background: none; }
 
     #play-pause-btn {
       width: 46px; height: 46px;
-      background: white !important;
-      border-radius: 50%;
-      color: #000 !important;
+      background: white !important; border-radius: 50%; color: #000 !important;
     }
-
     #play-pause-btn:hover { transform: scale(1.08); background: #eee !important; }
 
-    /* Volume */
-    .volume-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
+    .volume-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; }
     .volume-row svg { color: rgba(255,255,255,0.6); flex-shrink: 0; }
 
     #volume-slider {
-      flex: 1;
-      -webkit-appearance: none;
-      height: 3px;
-      background: rgba(255,255,255,0.25);
-      border-radius: 3px;
-      outline: none;
+      flex: 1; -webkit-appearance: none;
+      height: 3px; background: rgba(255,255,255,0.25); border-radius: 3px; outline: none;
     }
-
     #volume-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
+      -webkit-appearance: none; width: 12px; height: 12px;
+      border-radius: 50%; background: white; cursor: pointer;
     }
 
-    /* Status badge */
     #player-status {
-      text-align: center;
-      font-size: 12px;
-      color: rgba(255,255,255,0.5);
-      margin-top: 12px;
+      text-align: center; font-size: 12px;
+      color: rgba(255,255,255,0.5); margin-top: 12px;
     }
 
     .status-dot {
-      display: inline-block;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: #ccc;
-      margin-right: 5px;
+      display: inline-block; width: 7px; height: 7px;
+      border-radius: 50%; background: #ccc; margin-right: 5px;
+    }
+    .status-dot.ready { background: var(--spotify-green); }
+
+    /* ── SEARCH MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 100;
+      justify-content: center; align-items: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: #1a1a2e;
+      border: 1px solid rgba(29,185,84,0.3);
+      border-radius: 16px; width: 90%; max-width: 500px;
+      padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
 
-    .status-dot.ready { background: var(--spotify-green); }
+    .modal-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 16px;
+    }
+
+    .modal-header h3 { font-family: 'Syne', sans-serif; color: white; font-size: 18px; }
+
+    .close-btn {
+      background: none; border: none; color: rgba(255,255,255,0.6);
+      cursor: pointer; font-size: 22px; padding: 0; line-height: 1;
+    }
+    .close-btn:hover { color: white; background: none; }
+
+    .search-input-wrap { display: flex; gap: 8px; margin-bottom: 16px; }
+
+    #search-input {
+      flex: 1; padding: 10px 14px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1); color: white;
+      font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none;
+    }
+    #search-input::placeholder { color: rgba(255,255,255,0.4); }
+    #search-input:focus { border-color: var(--spotify-green); }
+
+    #search-btn { background: var(--spotify-green); border-radius: 8px; padding: 10px 16px; }
+    #search-btn:hover { background: #17a349; }
+
+    #search-results { display: flex; flex-direction: column; gap: 8px; }
+
+    .result-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px; border-radius: 10px;
+      background: rgba(255,255,255,0.07);
+      cursor: pointer; transition: background 0.2s;
+      border: 1px solid transparent;
+    }
+    .result-item:hover {
+      background: rgba(29,185,84,0.15);
+      border-color: rgba(29,185,84,0.3);
+    }
+    .result-item.playing {
+      background: rgba(29,185,84,0.2);
+      border-color: var(--spotify-green);
+    }
+
+    .result-art { width: 46px; height: 46px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+    .result-info { flex: 1; overflow: hidden; }
+    .result-name { color: white; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .result-artist { color: rgba(255,255,255,0.55); font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .result-duration { color: rgba(255,255,255,0.4); font-size: 12px; flex-shrink: 0; }
+    .play-indicator { color: var(--spotify-green); font-size: 18px; flex-shrink: 0; width: 16px; }
+
+    #search-status { text-align: center; color: rgba(255,255,255,0.5); font-size: 13px; padding: 20px 0; }
   </style>
 </head>
 <body>
 <section class="hero">
-  <div class="wave">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="wave"><span></span><span></span><span></span></div>
 
   <div class="main-layout">
 
     <!-- ── SPOTIFY PLAYER ── -->
     <div class="card spotify-card">
       <div class="spotify-header">
-        <!-- Spotify logo SVG -->
         <svg class="spotify-logo" viewBox="0 0 24 24" fill="#1DB954">
           <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
         </svg>
         <h2>Now Playing</h2>
+        <button class="search-icon-btn" id="search-icon-btn" onclick="openSearch()" title="Search songs">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="6"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
       </div>
 
-      <!-- LOGIN STATE -->
       <div id="spotify-login-area">
         <p>Connect your Spotify Premium account to play music while you work on your todos.</p>
         <button id="login-btn" onclick="spotifyLogin()">Connect Spotify</button>
       </div>
 
-      <!-- PLAYER STATE -->
       <div id="spotify-player-area">
         <div class="now-playing">
           <img id="album-art" src="" alt="Album Art" />
           <div class="track-info">
             <div id="track-name">No track playing</div>
-            <div id="artist-name">Open Spotify and play a song</div>
+            <div id="artist-name">Search a song or open Spotify</div>
           </div>
         </div>
 
@@ -401,40 +345,22 @@
         </div>
 
         <div class="controls">
-          <!-- Previous -->
-          <button class="ctrl-btn" onclick="previousTrack()" title="Previous">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/>
-            </svg>
+          <button class="ctrl-btn" onclick="previousTrack()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
           </button>
-
-          <!-- Play/Pause -->
-          <button class="ctrl-btn" id="play-pause-btn" onclick="togglePlay()" title="Play/Pause">
-            <svg id="play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-            <svg id="pause-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none">
-              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-            </svg>
+          <button class="ctrl-btn" id="play-pause-btn" onclick="togglePlay()">
+            <svg id="play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pause-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
           </button>
-
-          <!-- Next -->
-          <button class="ctrl-btn" onclick="nextTrack()" title="Next">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/>
-            </svg>
+          <button class="ctrl-btn" onclick="nextTrack()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
           </button>
         </div>
 
-        <!-- Volume -->
         <div class="volume-row">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
-          </svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
           <input type="range" id="volume-slider" min="0" max="100" value="50" oninput="setVolume(this.value)" />
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-          </svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
         </div>
 
         <div id="player-status">
@@ -450,7 +376,6 @@
         <h1 id="greeting">My Todos</h1>
         <p>Stay focused. One task at a time.</p>
       </header>
-
       <div class="content">
         <input id="todoInput" placeholder="Add a new task..." />
         <button onclick="addTodo()">Add</button>
@@ -461,15 +386,28 @@
   </div>
 </section>
 
-<!-- Spotify SDK -->
+<!-- ── SEARCH MODAL ── -->
+<div class="modal-overlay" id="search-modal" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🔍 Search Songs</h3>
+      <button class="close-btn" onclick="closeSearch()">✕</button>
+    </div>
+    <div class="search-input-wrap">
+      <input id="search-input" placeholder="Search for a song or artist..." onkeydown="if(event.key==='Enter') searchSongs()" />
+      <button id="search-btn" onclick="searchSongs()">Search</button>
+    </div>
+    <div id="search-status">Type a song name and press Search</div>
+    <div id="search-results"></div>
+  </div>
+</div>
+
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
 <script>
-  // ── GREETING ──
   const username = localStorage.getItem("username");
   if (username) document.getElementById("greeting").textContent = `Hi, ${username} 👋`;
 
-  // ── SPOTIFY CONFIG ──
   const CLIENT_ID = '94ff9c27f9504532bd581889da836a0f';
   const REDIRECT_URI = 'https://notesapp-bscc.onrender.com/index.html';
   const SCOPES = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
@@ -480,69 +418,45 @@
   let currentDuration = 0;
   let isPlaying = false;
   let progressInterval = null;
+  let currentTrackUri = null;
 
-  // ── PKCE HELPERS ──
-  async function generateCodeVerifier() {
-    const array = new Uint32Array(56);
-    crypto.getRandomValues(array);
-    return Array.from(array, d => d.toString(36)).join('');
+  async function spotifyLogin() {
+    const res = await fetch('/spotify/verifier');
+    const { id, challenge } = await res.json();
+    localStorage.setItem('spotify_verifier_id', id);
+    const params = new URLSearchParams({
+      client_id: CLIENT_ID, response_type: 'code',
+      redirect_uri: REDIRECT_URI, scope: SCOPES,
+      code_challenge_method: 'S256', code_challenge: challenge
+    });
+    window.location = 'https://accounts.spotify.com/authorize?' + params.toString();
   }
 
-  async function generateCodeChallenge(verifier) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(verifier);
-    const digest = await crypto.subtle.digest('SHA-256', data);
-    return btoa(String.fromCharCode(...new Uint8Array(digest)))
-      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+  async function exchangeToken(code) {
+    const verifierId = localStorage.getItem('spotify_verifier_id');
+    const response = await fetch('/spotify/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, verifierId })
+    });
+    const data = await response.json();
+    console.log('Token response:', data);
+    if (data.access_token) {
+      localStorage.setItem('spotify_token', data.access_token);
+      localStorage.setItem('spotify_refresh', data.refresh_token);
+      window.history.replaceState({}, document.title, window.location.pathname);
+      initSpotifyPlayer(data.access_token);
+    }
   }
-
- async function spotifyLogin() {
-  const res = await fetch('/spotify/verifier');
-  const { id, challenge } = await res.json();
-  localStorage.setItem('spotify_verifier_id', id);
-
-  const params = new URLSearchParams({
-    client_id: CLIENT_ID,
-    response_type: 'code',
-    redirect_uri: REDIRECT_URI,
-    scope: SCOPES,
-    code_challenge_method: 'S256',
-    code_challenge: challenge
-  });
-
-  window.location = 'https://accounts.spotify.com/authorize?' + params.toString();
-}
-
-async function exchangeToken(code) {
-  const verifierId = localStorage.getItem('spotify_verifier_id');
-  console.log('Verifier ID:', verifierId);
-
-  const response = await fetch('/spotify/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ code, verifierId })
-  });
-
-  const data = await response.json();
-  console.log('Token response:', data);
-  if (data.access_token) {
-    localStorage.setItem('spotify_token', data.access_token);
-    localStorage.setItem('spotify_refresh', data.refresh_token);
-    window.history.replaceState({}, document.title, window.location.pathname);
-    initSpotifyPlayer(data.access_token);
-  }
-}
 
   async function refreshToken() {
     const refresh = localStorage.getItem('spotify_refresh');
     if (!refresh) return null;
-
-const response = await fetch('/spotify/refresh', {
+    const response = await fetch('/spotify/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refresh })
     });
-
     const data = await response.json();
     if (data.access_token) {
       localStorage.setItem('spotify_token', data.access_token);
@@ -551,7 +465,6 @@ const response = await fetch('/spotify/refresh', {
     return null;
   }
 
-  // ── INIT SDK ──
   window.onSpotifyWebPlaybackSDKReady = () => {
     const token = localStorage.getItem('spotify_token');
     if (!token) return;
@@ -564,81 +477,64 @@ const response = await fetch('/spotify/refresh', {
 
     player = new Spotify.Player({
       name: 'My Todos Player',
-      getOAuthToken: async cb => {
-        let t = localStorage.getItem('spotify_token');
-        cb(t);
-      },
+      getOAuthToken: cb => { cb(localStorage.getItem('spotify_token')); },
       volume: 0.5
     });
 
-   player.addListener('ready', ({ device_id }) => {
-  deviceId = device_id;
-  setStatus('Ready', true);
-  console.log('Ready with Device ID', device_id);
-
-  // Transfer playback to this browser automatically
-  const token = localStorage.getItem('spotify_token');
-  fetch('https://api.spotify.com/v1/me/player', {
-    method: 'PUT',
-    headers: {
-      'Authorization': 'Bearer ' + token,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      device_ids: [device_id],
-      play: true
-    })
-  });
-});
-
-    player.addListener('not_ready', ({ device_id }) => {
-      setStatus('Offline', false);
+    player.addListener('ready', ({ device_id }) => {
+      deviceId = device_id;
+      setStatus('Ready', true);
+      // Show search icon
+      const btn = document.getElementById('search-icon-btn');
+      btn.style.display = 'flex';
+      console.log('Ready with Device ID', device_id);
+      // Transfer playback to browser
+      fetch('https://api.spotify.com/v1/me/player', {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('spotify_token'),
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ device_ids: [device_id], play: false })
+      });
     });
 
-    player.addListener('initialization_error', ({ message }) => {
-      setStatus('Init error', false);
-    });
+    player.addListener('not_ready', () => setStatus('Offline', false));
+    player.addListener('initialization_error', () => setStatus('Init error', false));
 
-    player.addListener('authentication_error', async ({ message }) => {
+    player.addListener('authentication_error', async () => {
       setStatus('Re-authenticating...', false);
       const newToken = await refreshToken();
       if (!newToken) {
         localStorage.removeItem('spotify_token');
         document.getElementById('spotify-login-area').style.display = 'block';
         document.getElementById('spotify-player-area').style.display = 'none';
+        document.getElementById('search-icon-btn').style.display = 'none';
       }
     });
 
-    player.addListener('account_error', ({ message }) => {
-      setStatus('Premium required', false);
-    });
+    player.addListener('account_error', () => setStatus('Premium required', false));
 
     player.addListener('player_state_changed', state => {
       if (!state) return;
-
       isPlaying = !state.paused;
       currentDuration = state.duration;
       currentPosition = state.position;
 
-      // Update play/pause icon
       document.getElementById('play-icon').style.display = isPlaying ? 'none' : 'block';
       document.getElementById('pause-icon').style.display = isPlaying ? 'block' : 'none';
 
-      // Track info
       const track = state.track_window.current_track;
+      currentTrackUri = track.uri;
       document.getElementById('track-name').textContent = track.name;
       document.getElementById('artist-name').textContent = track.artists.map(a => a.name).join(', ');
-
-      // Album art
       if (track.album.images.length > 0) {
         document.getElementById('album-art').src = track.album.images[0].url;
       }
 
-      // Time
       document.getElementById('time-total').textContent = formatTime(currentDuration);
       updateProgress();
 
-      // Progress ticker
       clearInterval(progressInterval);
       if (isPlaying) {
         progressInterval = setInterval(() => {
@@ -646,9 +542,103 @@ const response = await fetch('/spotify/refresh', {
           updateProgress();
         }, 1000);
       }
+
+      highlightPlaying(currentTrackUri);
     });
 
     player.connect();
+  }
+
+  // ── SEARCH ──
+  function openSearch() {
+    document.getElementById('search-modal').classList.add('open');
+    setTimeout(() => document.getElementById('search-input').focus(), 100);
+  }
+
+  function closeSearch() {
+    document.getElementById('search-modal').classList.remove('open');
+  }
+
+  function closeOnOverlay(e) {
+    if (e.target === document.getElementById('search-modal')) closeSearch();
+  }
+
+  async function searchSongs() {
+    const query = document.getElementById('search-input').value.trim();
+    if (!query) return;
+
+    document.getElementById('search-status').textContent = '⏳ Searching...';
+    document.getElementById('search-results').innerHTML = '';
+
+    const token = localStorage.getItem('spotify_token');
+    const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=5`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await res.json();
+
+    if (!data.tracks || data.tracks.items.length === 0) {
+      document.getElementById('search-status').textContent = '❌ No results found';
+      return;
+    }
+
+    document.getElementById('search-status').textContent = '';
+    const resultsEl = document.getElementById('search-results');
+
+    data.tracks.items.forEach(track => {
+      const div = document.createElement('div');
+      div.className = 'result-item' + (track.uri === currentTrackUri ? ' playing' : '');
+      div.dataset.uri = track.uri;
+
+      const art = track.album.images[2]?.url || track.album.images[0]?.url || '';
+      const artists = track.artists.map(a => a.name).join(', ');
+
+      div.innerHTML = `
+        <img class="result-art" src="${art}" alt="" />
+        <div class="result-info">
+          <div class="result-name">${track.name}</div>
+          <div class="result-artist">${artists}</div>
+        </div>
+        <div class="result-duration">${formatTime(track.duration_ms)}</div>
+        <div class="play-indicator">${track.uri === currentTrackUri ? '▶' : ''}</div>
+      `;
+
+      div.onclick = () => playSong(track.uri);
+      resultsEl.appendChild(div);
+    });
+  }
+
+  async function playSong(uri) {
+    if (!deviceId) return;
+    const token = localStorage.getItem('spotify_token');
+    await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ uris: [uri] })
+    });
+    closeSearch();
+  }
+
+  function highlightPlaying(uri) {
+    document.querySelectorAll('.result-item').forEach(el => {
+      const active = el.dataset.uri === uri;
+      el.classList.toggle('playing', active);
+      el.querySelector('.play-indicator').textContent = active ? '▶' : '';
+    });
+  }
+
+  function togglePlay()    { player && player.togglePlay(); }
+  function nextTrack()     { player && player.nextTrack(); }
+  function previousTrack() { player && player.previousTrack(); }
+  function setVolume(val)  { player && player.setVolume(val / 100); }
+
+  function seekTrack(e) {
+    if (!player || currentDuration === 0) return;
+    const pct = e.offsetX / e.currentTarget.offsetWidth;
+    player.seek(Math.floor(pct * currentDuration));
   }
 
   function updateProgress() {
@@ -668,37 +658,11 @@ const response = await fetch('/spotify/refresh', {
     document.getElementById('status-dot').className = 'status-dot' + (ready ? ' ready' : '');
   }
 
-  // ── CONTROLS ──
-  function togglePlay() { player && player.togglePlay(); }
-  function nextTrack()  { player && player.nextTrack(); }
-  function previousTrack() { player && player.previousTrack(); }
-
-  function setVolume(val) {
-    if (player) player.setVolume(val / 100);
-  }
-
-  function seekTrack(e) {
-    if (!player || currentDuration === 0) return;
-    const bar = e.currentTarget;
-    const pct = e.offsetX / bar.offsetWidth;
-    player.seek(Math.floor(pct * currentDuration));
-  }
-
-
-
-// ── ON LOAD: Check for auth code or existing token ──
   window.addEventListener('load', () => {
-    console.log('--- PAGE LOADED ---');
-    console.log('Search:', window.location.search);
-
     const params = new URLSearchParams(window.location.search);
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-
     const code = params.get('code');
     const hashToken = hashParams.get('access_token');
-
-    console.log('Code found:', code);
-    console.log('Hash token found:', hashToken);
 
     if (hashToken) {
       localStorage.setItem('spotify_token', hashToken);
@@ -708,11 +672,9 @@ const response = await fetch('/spotify/refresh', {
       setStatus('Connecting...', false);
       initSpotifyPlayer(hashToken);
     } else if (code) {
-      console.log('Calling exchangeToken...');
       exchangeToken(code);
     } else {
       const token = localStorage.getItem('spotify_token');
-      console.log('Stored token:', token ? 'EXISTS' : 'NULL');
       if (token) {
         document.getElementById('spotify-login-area').style.display = 'none';
         document.getElementById('spotify-player-area').style.display = 'block';
@@ -723,17 +685,8 @@ const response = await fetch('/spotify/refresh', {
 
   document.getElementById("greeting").textContent =
     username ? `Hi, ${username} 👋` : 'My Todos';
-
 </script>
 
-<!-- Your existing app.js -->
 <script src="app.js"></script>
-
 </body>
 </html>
-
-
-
-
-
-
