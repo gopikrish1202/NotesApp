@@ -24,13 +24,22 @@ async function loadTodos() {
   console.log("Todos from backend:", todos);
 
   const list = document.getElementById("todoList");
+  rerenderList(todos, list); // ✅ use rerenderList instead of inline build
+}
+
+// ---------------- RERENDER LIST (no fetch) ----------------
+function rerenderList(todos, list) {
   list.innerHTML = "";
 
-  // ✅ index added here
   todos.forEach((todo, index) => {
     const li = document.createElement("li");
     li.className = "todo-item";
-    li.dataset.index = index; // ✅ needed for drag-drop
+    li.dataset.index = index; // ✅ needed for drag
+
+    // ===== DRAG HANDLE =====
+    const brailleScrollIcon = document.createElement("span");
+    brailleScrollIcon.textContent = "⠿";
+    brailleScrollIcon.className = "drag-handle";
 
     // ===== STATUS ICON =====
     let statusIcon;
@@ -87,11 +96,6 @@ async function loadTodos() {
       }
     });
 
-    // ===== DRAG HANDLE =====
-    const brailleScrollIcon = document.createElement("span");
-    brailleScrollIcon.textContent = "⠿";
-    brailleScrollIcon.className = "drag-handle";
-
     // ===== APPEND =====
     li.appendChild(brailleScrollIcon);
     li.appendChild(statusIcon);
@@ -100,7 +104,7 @@ async function loadTodos() {
     li.appendChild(archiveBtn);
     li.appendChild(deleteBtn);
 
-    attachDragEvents(li, index, list, todos); // ✅ pass list and todos
+    attachDragEvents(li, index, list, todos);
     list.appendChild(li);
   });
 }
@@ -140,12 +144,15 @@ function attachDragEvents(li, index, list, todos) {
     const midY = li.getBoundingClientRect().top + li.offsetHeight / 2;
     let insertAt = e.clientY < midY ? targetIndex : targetIndex + 1;
 
+    // ✅ Splice in the todos array
     const [moved] = todos.splice(dragSrcIndex, 1);
     if (insertAt > dragSrcIndex) insertAt--;
     todos.splice(insertAt, 0, moved);
 
-    loadTodos(); // re-render from updated todos order
+    // ✅ Re-render locally — no loadTodos(), no fetch
+    rerenderList(todos, list);
 
+    // ✅ Flash the dropped item green
     setTimeout(() => {
       const items = list.querySelectorAll("li");
       items[insertAt]?.classList.add("dropped");
@@ -167,7 +174,7 @@ async function addTodo() {
 
   if (!input.value.trim() || !userId) return;
 
-  if (!userId || userId.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userId)) {
+  if (userId.length !== 24 || !/^[0-9a-fA-F]{24}$/.test(userId)) {
     alert("Invalid or missing user ID. Please log in again.");
     return;
   }
@@ -186,7 +193,7 @@ async function addTodo() {
   }
 
   input.value = "";
-  loadTodos();
+  loadTodos(); // ✅ fetch fresh list after adding
 }
 
 // ---------------- UPDATE TODO NAME ----------------
@@ -198,7 +205,7 @@ async function updateTodo(id, newName) {
   });
 
   if (!res.ok) { console.error("Failed to update name"); return; }
-  loadTodos();
+  loadTodos(); // ✅ fetch fresh list after rename
 }
 
 // ---------------- UPDATE STATUS ----------------
@@ -214,7 +221,7 @@ async function updateStatus(id, status) {
     const res = await fetch(`/todos/${id}`, { method: "DELETE" });
     if (!res.ok) { console.error("Failed to delete todo"); return; }
   }
-  loadTodos();
+  loadTodos(); // ✅ fetch fresh list after status change
 }
 
 // ---------------- INITIAL LOAD ----------------
