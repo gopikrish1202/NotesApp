@@ -197,6 +197,44 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 
+// Spotify token exchange
+app.post("/spotify/token", async (req, res) => {
+  const { code, verifier } = req.body;
+
+  const response = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: "94ff9c27f9504532bd581889da836a0f",
+      grant_type: "authorization_code",
+      code: code,
+      redirect_uri: "https://notesapp-bscc.onrender.com/index.html",
+      code_verifier: verifier
+    })
+  });
+
+  const data = await response.json();
+  res.json(data);
+});
+
+// Spotify token refresh
+app.post("/spotify/refresh", async (req, res) => {
+  const { refresh_token } = req.body;
+
+  const response = await fetch("https://accounts.spotify.com/api/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: "94ff9c27f9504532bd581889da836a0f",
+      grant_type: "refresh_token",
+      refresh_token: refresh_token
+    })
+  });
+
+  const data = await response.json();
+  res.json(data);
+});
+
 
 // ---------------- DB CONNECTION ----------------
 mongoose.connect(
@@ -211,3 +249,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on ${PORT}`);
 });
+
