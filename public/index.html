@@ -496,42 +496,42 @@
       .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
   }
 
-  async function spotifyLogin() {
-    const verifier = await generateCodeVerifier();
-    const challenge = await generateCodeChallenge(verifier);
-    localStorage.setItem('spotify_verifier', verifier);
+ async function spotifyLogin() {
+  const res = await fetch('/spotify/verifier');
+  const { id, challenge } = await res.json();
+  localStorage.setItem('spotify_verifier_id', id);
 
-    const params = new URLSearchParams({
-      client_id: CLIENT_ID,
-      response_type: 'code',
-      redirect_uri: REDIRECT_URI,
-      scope: SCOPES,
-      code_challenge_method: 'S256',
-      code_challenge: challenge
-    });
+  const params = new URLSearchParams({
+    client_id: CLIENT_ID,
+    response_type: 'code',
+    redirect_uri: REDIRECT_URI,
+    scope: SCOPES,
+    code_challenge_method: 'S256',
+    code_challenge: challenge
+  });
 
-    window.location = 'https://accounts.spotify.com/authorize?' + params.toString();
-  }
+  window.location = 'https://accounts.spotify.com/authorize?' + params.toString();
+}
 
 async function exchangeToken(code) {
-    const verifier = localStorage.getItem('spotify_verifier');
-    const response = await fetch('/spotify/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, verifier })
-    });
-  
+  const verifierId = localStorage.getItem('spotify_verifier_id');
+  console.log('Verifier ID:', verifierId);
 
-    const data = await response.json();
-  console.log('Token response:', data); 
-    if (data.access_token) {
-      localStorage.setItem('spotify_token', data.access_token);
-      localStorage.setItem('spotify_refresh', data.refresh_token);
-      // Clean URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-      initSpotifyPlayer(data.access_token);
-    }
+  const response = await fetch('/spotify/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, verifierId })
+  });
+
+  const data = await response.json();
+  console.log('Token response:', data);
+  if (data.access_token) {
+    localStorage.setItem('spotify_token', data.access_token);
+    localStorage.setItem('spotify_refresh', data.refresh_token);
+    window.history.replaceState({}, document.title, window.location.pathname);
+    initSpotifyPlayer(data.access_token);
   }
+}
 
   async function refreshToken() {
     const refresh = localStorage.getItem('spotify_refresh');
@@ -717,6 +717,7 @@ const response = await fetch('/spotify/refresh', {
 
 </body>
 </html>
+
 
 
 
