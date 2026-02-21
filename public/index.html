@@ -571,11 +571,25 @@ const response = await fetch('/spotify/refresh', {
       volume: 0.5
     });
 
-    player.addListener('ready', ({ device_id }) => {
-      deviceId = device_id;
-      setStatus('Ready', true);
-      console.log('Ready with Device ID', device_id);
-    });
+   player.addListener('ready', ({ device_id }) => {
+  deviceId = device_id;
+  setStatus('Ready', true);
+  console.log('Ready with Device ID', device_id);
+
+  // Transfer playback to this browser automatically
+  const token = localStorage.getItem('spotify_token');
+  fetch('https://api.spotify.com/v1/me/player', {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      device_ids: [device_id],
+      play: true
+    })
+  });
+});
 
     player.addListener('not_ready', ({ device_id }) => {
       setStatus('Offline', false);
@@ -717,6 +731,7 @@ const response = await fetch('/spotify/refresh', {
 
 </body>
 </html>
+
 
 
 
